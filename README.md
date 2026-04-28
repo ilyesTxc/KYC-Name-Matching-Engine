@@ -4,19 +4,19 @@ A Java project that simulates a client screening system used in KYC and AML comp
 
 The goal of the application is to help a bank verify whether a client name appears in one or more sanctions or watchlist files. These lists are provided as CSV files and may contain a large number of records, which makes performance and result relevance important.
 
-Context
+-> Context :
 
 In banking and financial services, institutions must verify clients before opening accounts or providing services. This process helps detect people who may appear on sanctions lists, politically exposed person lists, or other compliance watchlists.
 
 A simple exact comparison is not enough, because names can be written differently. For example, accents, spelling variations, missing spaces, or typing errors can make two similar names appear different. This project therefore uses a modular matching pipeline that can support exact and fuzzy comparison methods.
 
-Project Objective
+-> Project Objective :
 
 This project aims to build a flexible name matching engine that can compare client names against control lists, calculate similarity scores, select the most relevant matches, and deliver the results in a readable format.
 
 The system is designed around two main use cases. The first is real-time verification, where an agent checks one client name quickly. The second is batch verification, where a full client database is compared against selected control lists.
 
-Architecture
+-> Architecture :
 
 The project follows a pipeline structure.
 
@@ -29,7 +29,7 @@ Data loading
 
 Each step is separated into its own component, which makes the project easier to extend and maintain.
 
-Main Components
+-> Main Components :
 
 The kyc.model package contains the main data objects used by the system. Nom represents a person name, CoupleValeur represents a name associated with a similarity score, and Resultat represents a final match between a client and a sanctioned name.
 
@@ -45,7 +45,7 @@ The kyc.livreurs package is responsible for delivering the final results. Result
 
 The MoteurDeRecherche class acts as the central engine. It coordinates the complete pipeline from loading data to delivering the final results.
 
-CSV Format
+-> CSV Format :
 
 The expected CSV format is simple.
 
