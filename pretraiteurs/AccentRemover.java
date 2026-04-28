@@ -1,12 +1,14 @@
 package kyc.pretraiteurs;
 
-import kyc.pretraiteurs.PreTraiteurNom;
+import java.text.Normalizer;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class AccentRemover implements PreTraiteurNom {
-    @Override
+
     public List<String> preTraiter(List<String> noms) {
-        // TODO : supprimer les accents de chaque nom
-        return null;
+        return noms.stream().map(noms → Normalizer.normalize(noms, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}", "")).collect(Collectors.toList());
+
     }
 }
