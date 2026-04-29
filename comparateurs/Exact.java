@@ -1,12 +1,12 @@
 package kyc.comparateurs;
-
-import kyc.comparateurs.ComparateurNom;
 import kyc.model.Nom;
-
 public class Exact extends ComparateurNom {
-    @Override
-    public double comparer(Nom n1, Nom n2) {
-        // TODO : retourner 1.0 si noms identiques, 0.0 sinon
-        return 0;
+    public double comparer(Nom n1, Nom n2){
+        if (n1 == null || n2 == null) return 0.0;
+        if (n1.getNomPretraite().equalsIgnoreCase(n2.getNomPretraite())) {
+            return 1.0;
+        } else {
+            return 0.0;
+        }
     }
 }
