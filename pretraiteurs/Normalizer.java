@@ -17,20 +17,4 @@ public class Normalizer implements PreTraiteurNom {
 
         return results;
     }
-
-    public static void main(String[] args) {
-        PreTraiteurNom normalizer = new Normalizer();
-
-        List<String> noms = Arrays.asList(
-                "  Ahmed    Ben   Ali  ",
-                "  ILYÈS  ",
-                "Sâmi     Salah",
-                "   Mohamed\tAli   "
-        );
-
-        List<String> resultats = normalizer.preTraiter(noms);
-
-        System.out.println(resultats);
-    }
-
 }
