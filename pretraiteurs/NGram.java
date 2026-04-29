@@ -1,55 +1,28 @@
 package kyc.pretraiteurs;
 
-import kyc.comparateurs.ComparateurChaine;
-import kyc.pretraiteurs.PreTraiteurNom;
-
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Nodes.collect
 
-public class NGram implements ComparateurChaine, PreTraiteurNom {
+import static java.util.stream.Nodes.collect;()
 
+public class NGram implements PreTraiteurNom{
     private int n;
-
-    public NGram() {
-        this.n = 2; // bigrammes par défaut
+    public NGram(){
+        this.n=2;
     }
-
-    public NGram(int n) {
-        this.n = n;
+    public NGram(int n){
+        this.n=n;
     }
-
-    // ---- ComparateurChaine ----
-
-    @Override
-    public double comparerChaine(String l1, String l2) {
-        // TODO : implémenter la similarité par N-grammes
-        return 0;
+    public List<String> preTraiter(List<String> noms){
+        return  noms.stream().flatMap(noms → extraireNGrams(noms).stream()).collect(Collectors.toList());
     }
-
-    // ---- PreTraiteurNom ----
-
-    /**
-     * Décompose chaque nom de la liste en N-grammes et retourne
-     * la liste des tokens obtenus.
-     */
-    @Override
-    public List<String> preTraiter(List<String> noms) {
-        List<String> tokens = new ArrayList<>();
-        for (String nom : noms) {
-            tokens.addAll(extraireNGrams(nom));
-        }
-        return tokens;
-    }
-
-    /**
-     * Extrait les N-grammes d'une chaîne donnée.
-     */
-    private List<String> extraireNGrams(String s) {
-        List<String> ngrams = new ArrayList<>();
-        if (s == null || s.length() < n) return ngrams;
-        for (int i = 0; i <= s.length() - n; i++) {
-            ngrams.add(s.substring(i, i + n));
-        }
-        return ngrams;
+    private List<String> extraireNGrams(String s){
+        if (s == null || s.length() < n) return Collections.emptyList();
+        return IntStream.rangeClosed(0, s.length() - n).mapToObj(int i → s.substring(i, i+n)).collect(Collectors.toList());
     }
 }
+
+
