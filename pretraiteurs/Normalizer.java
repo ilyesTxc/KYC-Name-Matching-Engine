@@ -7,11 +7,23 @@ import java.util.Arrays;
 
 public class Normalizer implements PreTraiteurNom {
     public List<String> preTraiter(List<String> noms) {
+        if(noms == null){
+            return new ArrayList<>();
+        }
+
         List<String> results = new ArrayList<>();
 
         for(String nom : noms){
+                if(nom == null){
+                    continue;
+                }
+
                 nom = nom.trim();
-                nom = nom.replaceAll("\\s+"," ");
+                if(nom.isEmpty()){
+                    continue;
+                }
+               nom = nom.replaceAll("\\s+"," ");
+
                 results.add(nom);
         }
 
