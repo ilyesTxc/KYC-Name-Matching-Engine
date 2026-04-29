@@ -17,11 +17,11 @@ public class NGram implements PreTraiteurNom{
         this.n=n;
     }
     public List<String> preTraiter(List<String> noms){
-        return  noms.stream().flatMap(noms → extraireNGrams(noms).stream()).collect(Collectors.toList());
+        return  noms.stream().flatMap(nom -> extraireNGrams(nom).stream()).collect(Collectors.toList());
     }
     private List<String> extraireNGrams(String s){
         if (s == null || s.length() < n) return Collections.emptyList();
-        return IntStream.rangeClosed(0, s.length() - n).mapToObj(int i → s.substring(i, i+n)).collect(Collectors.toList());
+        return IntStream.rangeClosed(0, s.length() - n).mapToObj( i -> s.substring(i, i+n)).collect(Collectors.toList());
     }
 }
 
