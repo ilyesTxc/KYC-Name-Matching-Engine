@@ -1,18 +1,22 @@
 package kyc.model;
+import java.util.List;
 
 public class Nom {
     private int id;
     private String nomOriginal;
-    private String nomPretraite;
+    private List<String> nomPretraite;
 
     public Nom(int id, String nomOriginal) {
         this.id = id;
         this.nomOriginal = nomOriginal;
-        this.nomPretraite = nomOriginal;
     }
 
     public int getId() { return id; }
     public String getNomOriginal() { return nomOriginal; }
-    public String getNomPretraite() { return nomPretraite; }
-    public void setNomPretraite(String nomPretraite) { this.nomPretraite = nomPretraite; }
+    public List<String> getNomPretraite() { return nomPretraite; }
+    public void setNomPretraite(List<String> nomPretraite) { this.nomPretraite = nomPretraite; }
+
+    public String toString() {
+        return "Nom{id=" + id +", nomOriginal='" + nomOriginal+"'}";
+    }
 }
