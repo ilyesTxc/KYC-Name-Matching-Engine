@@ -3,7 +3,7 @@ package kyc.app;
 import kyc.model.Nom;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 public class IndexPhonetique {
 
@@ -12,7 +12,12 @@ public class IndexPhonetique {
     private final int lengthofSanctions;
 
     public Set<Nom> getBucket(String code) {
-        return index.getOrDefault(code, Collections.emptySet());
+
+        if(index.containsKey(code)){
+            return index.get(code);
+        }else{
+            return Collections.emptySet();
+        }
     }
 
     public int lengthofSanctions() {
@@ -37,12 +42,17 @@ public class IndexPhonetique {
         if (sanctions != null) {
             for (Nom n : sanctions) {
                 for (String code : encoderTokens(n)) {
-                    idx.computeIfAbsent(code, k->new LinkedHashSet<>()).add(n);
+
+                    if (!idx.containsKey(code)) {
+                        idx.put(code, new LinkedHashSet<>());
+                    }
+
+                    idx.get(code).add(n);
                 }
             }
         }
 
-        this.index =Collections.unmodifiableMap(idx);
+        this.index =idx;
 
         if(sanctions == null ){
             this.lengthofSanctions = 0;
@@ -63,9 +73,15 @@ public class IndexPhonetique {
         }
 
         char firstLetter =clean.charAt(0);
-        StringBuilder digits =new StringBuilder();
+        String digits ="";
 
-        char previousCode =soundCode.getOrDefault(firstLetter, '0');
+        char previousCode;
+
+        if (soundCode.containsKey(firstLetter)) {
+            previousCode = soundCode.get(firstLetter);
+        } else {
+            previousCode = '0';
+        }
 
         for (int i = 1; ( i <clean.length() && digits.length() < 3 ); i++) {
 
@@ -73,7 +89,7 @@ public class IndexPhonetique {
             char code =soundCode.getOrDefault(letter, '0');
 
             if (code != '0' && code != previousCode){
-                digits.append(code);
+                digits+=code;
             }
 
             if (code != '0'){
@@ -82,7 +98,7 @@ public class IndexPhonetique {
         }
 
         while (digits.length() < 3) {
-            digits.append('0');
+            digits+='0';
         }
 
         return firstLetter + digits.toString();
@@ -100,6 +116,13 @@ public class IndexPhonetique {
             return List.of();
         }
 
-        return tokens.stream().map(IndexPhonetique::soundexToken).collect(Collectors.toList());
+        List<String> codes = new ArrayList<>();
+
+        for (String token : tokens) {
+            String code = IndexPhonetique.soundexToken(token);
+            codes.add(code);
+        }
+
+        return codes;
     }
 }
