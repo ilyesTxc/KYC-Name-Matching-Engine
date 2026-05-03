@@ -35,7 +35,12 @@ public class IndexPrefixArbre{
         if(tokens == null || tokens.isEmpty()){
             return 0;
         }
-        return String.join(" ",tokens).length();
+        
+        int total = 0;
+        for(String t : tokens){
+            total+= t.length;
+        }
+        return total;
     }
 
     public int getTailleListeSanctions() {
