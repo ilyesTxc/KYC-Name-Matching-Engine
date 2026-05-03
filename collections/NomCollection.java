@@ -15,37 +15,30 @@ public class NomCollection implements CollectionKYC<Nom> {
 
     private final List<Nom> noms = new ArrayList<>();
 
-    @Override
     public void ajouter(Nom element) {
         noms.add(element);
     }
 
-    @Override
     public void supprimer(Nom element) {
         noms.remove(element);
     }
 
-    @Override
     public boolean contient(Nom element) {
         return noms.contains(element);
     }
 
-    @Override
     public int taille() {
         return noms.size();
     }
 
-    @Override
     public boolean estVide() {
         return noms.isEmpty();
     }
 
-    @Override
     public void vider() {
         noms.clear();
     }
 
-    @Override
     public List<Nom> versListe() {
         return new ArrayList<>(noms);
     }
