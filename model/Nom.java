@@ -15,7 +15,6 @@ public class Nom {
     public String getNomOriginal() { return nomOriginal; }
     public List<String> getNomPretraite() { return nomPretraite; }
     public void setNomPretraite(List<String> nomPretraite) { this.nomPretraite = nomPretraite; }
-
     public String toString() {
         return "Nom{id=" + id +", nomOriginal='" + nomOriginal+"'}";
     }
