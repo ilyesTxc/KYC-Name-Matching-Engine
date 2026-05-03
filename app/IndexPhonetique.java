@@ -101,7 +101,7 @@ public class IndexPhonetique {
             digits+='0';
         }
 
-        return firstLetter + digits.toString();
+        return firstLetter + digits;
     }
 
 
