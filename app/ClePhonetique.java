@@ -3,7 +3,6 @@ package kyc.app;
 import kyc.app.GenerateurCandidat;
 
 import kyc.model.Nom;
-import kyc.pretraiteurs.AccentRemover;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,7 +28,6 @@ public class ClePhonetique implements GenerateurCandidat{
     }
 
     public List<String> getClientCodes() {
-        return Collections.unmodifiableList(clientCodes);
+        return clientCodes;
     }
-
 }
