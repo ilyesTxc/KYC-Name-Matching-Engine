@@ -4,5 +4,5 @@ import kyc.model.Nom;
 import java.util.List;
 
 public interface GenerateurCandidat {
-    List<Nom> genererCandidats(List<Nom> listSanctionnes);
+    List<Nom> genererCandidats(Nom nomClient, List<Nom> listSanctionnes);
 }
