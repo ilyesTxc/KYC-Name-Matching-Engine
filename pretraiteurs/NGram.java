@@ -2,26 +2,33 @@ package kyc.pretraiteurs;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Nodes.collect
+import java.util.ArrayList;
 
-import static java.util.stream.Nodes.collect;()
+
 
 public class NGram implements PreTraiteurNom{
     private int n;
     public NGram(){
-        this.n=2;
+        this.n = 2;
     }
     public NGram(int n){
-        this.n=n;
+        this.n = n;
     }
     public List<String> preTraiter(List<String> noms){
-        return  noms.stream().flatMap(nom -> extraireNGrams(nom).stream()).collect(Collectors.toList());
+        List<String> result = new ArrayList<>();
+        for (String nom : noms) {
+            result.addAll(extraireNGrams(nom));
+        }
+        return result;
+
     }
     private List<String> extraireNGrams(String s){
         if (s == null || s.length() < n) return Collections.emptyList();
-        return IntStream.rangeClosed(0, s.length() - n).mapToObj( i -> s.substring(i, i+n)).collect(Collectors.toList());
+        List<String> ngrams = new ArrayList<>();
+        for ( int i = 0; i <= s.length() - n; i++) {
+            ngrams.add(s.substring(i, i + n));
+        }
+        return ngrams;
     }
 }
 
