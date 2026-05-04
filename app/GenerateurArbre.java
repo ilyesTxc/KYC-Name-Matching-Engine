@@ -27,7 +27,7 @@ public class GenerateurArbre implements GenerateurCandidat {
         this.tolerance = toleranceDefault;
     }
 
-    public List<Nom> genererCandidats(List<Nom> listSanctionnes){
+    public List<Nom> genererCandidats(Nom nomClient, List<Nom> listSanctionnes){
         List<String> tokens = nomClient.getNomPretraite();
 
         if(tokens == null || tokens.isEmpty()){
