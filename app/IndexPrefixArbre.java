@@ -38,7 +38,7 @@ public class IndexPrefixArbre{
         
         int total = 0;
         for(String t : tokens){
-            total+= t.length;
+            total+= t.length();
         }
         return total;
     }
