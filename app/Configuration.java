@@ -1,6 +1,8 @@
 package kyc.app;
+import kyc.selectionneurs.SelectionMatching;
+import kyc.pretraiteurs.PreTraiteurNom;
+import kyc.comparateurs.ComparateurNom;
 
-;
 
 public class Configuration {
     private double seuil;
