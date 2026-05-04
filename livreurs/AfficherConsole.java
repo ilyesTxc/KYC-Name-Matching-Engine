@@ -5,18 +5,19 @@ import kyc.model.Resultat;
 import java.util.List;
 
 public class AfficherConsole implements LivreurResultat {
-    private List<Resultat> alertes;
+    private  List<Resultat> alerts;
 
-    public AfficherConsole(List<Resultat> alertes) {
-        this.alertes = alertes;
+    public AfficherConsole(List<Resultat> alerts) {
+        this.alerts = alerts;
+
     }
-
     public void afficher() {
-        // TODO : afficher chaque Resultat dans la console
+        for (Resultat r : alerts) {
+            System.out.println( "Client: " + r.getNomClient().getNomOriginal() + " | Sanction: " + r.getNomSanction().getNomOriginal() + "| Score: " +r.getScore() + " | Source: " + r.getFichierSource());
+        }
     }
-
-    @Override
     public void livrer() {
         afficher();
     }
 }
+
