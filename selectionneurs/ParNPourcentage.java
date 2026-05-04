@@ -1,20 +1,27 @@
 package kyc.selectionneurs;
 
-import kyc.selectionneurs.SelectionMatching;
 import kyc.model.Nom;
 import kyc.model.CoupleValeur;
+import java.util.Comparator;
 import java.util.List;
+import java.util.ArrayList;
 
 public class ParNPourcentage implements SelectionMatching {
-    private double n2;
-
-    public ParNPourcentage(double n2) {
-        this.n2 = n2;
+    private double n;
+    public ParNPourcentage(double n) {
+        this.n = n;
     }
-
-    @Override
     public List<Nom> selectionner(List<CoupleValeur> couples) {
-        // TODO : retourner les N% meilleurs noms par score
-        return null;
+        List<Nom> result = new ArrayList<>();
+        int limit = (int) Math.round(couples.size() * n / 100.0);
+        couples.sort(Comparator.comparingDouble((CoupleValeur couple)  -> couple.getScore()).reversed());
+        for (int i = 0; i < limit; i++) {
+            result.add(couples.get(i).getNom());
+        }
+        return result;
     }
+
 }
+
+
+
