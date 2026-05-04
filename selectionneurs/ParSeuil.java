@@ -14,16 +14,16 @@ public class ParSeuil implements SelectionMatching {
         this.seuil = seuil;
     }
 
-    public List<Resultat> selectionner(List<CoupleValeur> couples) {
+    public List<Resultat> selectionner(Nom nomClient, List<CoupleValeur> couples) {
         if (couples == null){
             return new ArrayList<>();
         }
         List<Resultat> resultats= new ArrayList<>();
         for (CoupleValeur couple: couples){
-            if ( couple != null && couple.getScore() >= seuil){
-                Resultat resultat = new Resultat( nomClient, couple.getNom(), couple.getScore());
+            if ( couple != null && couple.getScore() >= seuil) {
+                Resultat resultat = new Resultat(nomClient, couple.getNom(), couple.getScore(), "source inconnue");
+                resultats.add(resultat);
             }
-            resultats.add(resultat);
         }
         return resultats;
     }
