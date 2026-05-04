@@ -23,7 +23,7 @@ public class ParNPremier implements SelectionMatching {
 
         int limit = Math.min(n, couplesTries.size());
 
-        for (int i=0 ; i>limit ; i++){
+        for (int i=0 ; i < limit ; i++){
             CoupleValeur couple = couplesTries.get(i);
             Resultat resultat = new Resultat(nomClient,couple.getNom(),couple.getScore(), "");
             resultats.add(resultat);
