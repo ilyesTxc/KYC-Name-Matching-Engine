@@ -1,9 +1,8 @@
 package kyc.selectionneurs;
 
-import kyc.selectionneurs.SelectionMatching;
 import kyc.model.Nom;
 import kyc.model.CoupleValeur;
-import kyc.model.Resulat;
+import kyc.model.Resultat;
 import java.util.List;
 import java.util.ArrayList;
 
