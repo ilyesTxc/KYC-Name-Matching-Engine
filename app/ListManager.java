@@ -18,7 +18,7 @@ public class ListManager {
 
     public void loadCSV(String path) {
         if (path == null || path.isBlank()) {
-            System.out.println(" Chemin CSV invalide.");
+            System.out.println("Chemin CSV invalide.");
             return;
         }
         int added = 0;
@@ -28,26 +28,22 @@ public class ListManager {
             while ((line = br.readLine()) != null) {
                 lineNumber++;
                 line = line.trim();
-                if (line.isEmpty() || line.startsWith("#") || line.equalsIgnoreCase("type,nom")) {
-                    continue;
-                }
+                if (line.isEmpty() || line.startsWith("#")) continue;
+
                 String[] parts = line.split(",", 2);
                 if (parts.length < 2) {
                     System.out.printf("Ligne %d ignorée : %s%n", lineNumber, line);
                     continue;
                 }
-                String type = parts[0].trim().toLowerCase();
+
+                // first column is wikidata id, second is the name
                 String nomStr = parts[1].trim();
                 if (nomStr.isEmpty()) continue;
-                Nom nom = new Nom(++compteur, nomStr);
-                switch (type) {
-                    case "client" -> listeClients.add(nom);
-                    case "sanction" -> listeSanctions.add(nom);
-                    default -> System.out.printf("Ligne %d : type inconnu '%s'%n", lineNumber, type);
-                }
+
+                listeSanctions.add(new Nom(++compteur, nomStr));
                 added++;
             }
-            System.out.printf("%d nom(s) chargé(s) depuis : %s%n", added, path);
+            System.out.printf("%d sanctions chargées depuis : %s%n", added, path);
         } catch (IOException i) {
             System.out.println("Erreur lecture CSV : " + i.getMessage());
         }

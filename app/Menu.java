@@ -35,6 +35,7 @@ public class Menu {
         boolean continuer = true;
         while (continuer) {
             System.out.println("Moteur De Recherche De Noms");
+            System.out.println("0. Charger un fichier CSV");
             System.out.println("1. Ajouter un client");
             System.out.println("2. Ajouter une sanction");
             System.out.println("3. Lancer le pipeline");
@@ -46,6 +47,9 @@ public class Menu {
             String choix = scanner.nextLine().trim();
 
             switch (choix) {
+                case "0":
+                    chargerCSV();
+                    break;
                 case "1":
                     ajouter(demanderNom(), listManager.getListeClients());
                     break;
@@ -94,9 +98,11 @@ public class Menu {
     }
 
     private void lancerPipeline() {
-        LivreurResultat livreur = new AfficherConsole(derniersResultats != null ? derniersResultats : List.of());
-        MoteurDeRecherche moteur = new MoteurDeRecherche(config, listManager, livreur);
+        MoteurDeRecherche moteur = new MoteurDeRecherche(config, listManager, null);
         derniersResultats = moteur.lancerPipeline();
+        if (derniersResultats != null && !derniersResultats.isEmpty()) {
+            new AfficherConsole(derniersResultats).livrer();
+        }
     }
 
     public void rapport() {
@@ -199,6 +205,13 @@ public class Menu {
             default:
                 System.out.println("Choix invalide, prétraitement inchangé ");
         }
+    }
+
+    private void chargerCSV() {
+        System.out.println("Entrez le chemin du fichier CSV :");
+        String path = scanner.nextLine().trim();
+        listManager.loadCSV(path);
+        listManager.afficherStats();
     }
 
     public void quitter() {
