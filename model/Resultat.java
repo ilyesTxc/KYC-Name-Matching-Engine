@@ -13,8 +13,23 @@ public class Resultat {
         this.fichierSource = fichierSource;
     }
 
-    public Nom getNomClient() { return nomClient; }
-    public Nom getNomSanction() { return nomSanction; }
-    public double getScore() { return score; }
-    public String getFichierSource() { return fichierSource; }
+    public Nom getNomClient()
+    { 
+        return nomClient; 
+    }
+
+    public Nom getNomSanction() 
+    { 
+        return nomSanction;
+    }
+    
+    public double getScore() 
+    { 
+        return score;
+    }
+
+    public String getFichierSource() 
+    { 
+        return fichierSource; 
+    }
 }

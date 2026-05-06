@@ -12,17 +12,35 @@ public class Configuration {
     private ComparateurNom comparateur;
 
     public double getSeuil() { return seuil; }
-    public void setSeuil(double seuil) { this.seuil = seuil; }
+    public void setSeuil(double seuil) {
+        this.seuil = seuil;
+    }
 
-    public SelectionMatching getStrategie() { return strategie; }
-    public void setStrategie(SelectionMatching strategie) { this.strategie = strategie; }
+    public SelectionMatching getStrategie() {
+        return strategie;
+    }
+    public void setStrategie(SelectionMatching strategie) {
+        this.strategie = strategie;
+    }
 
-    public PreTraiteurNom getPreTraiteur() { return preTraiteur; }
-    public void setPreTraiteur(PreTraiteurNom preTraiteur) { this.preTraiteur = preTraiteur; }
+    public PreTraiteurNom getPreTraiteur() {
+        return preTraiteur;
+    }
+    public void setPreTraiteur(PreTraiteurNom preTraiteur) {
+        this.preTraiteur = preTraiteur;
+    }
 
-    public GenerateurCandidat getGenerateur() { return generateur; }
-    public void setGenerateur(GenerateurCandidat generateur) { this.generateur = generateur; }
+    public GenerateurCandidat getGenerateur() {
+        return generateur;
+    }
+    public void setGenerateur(GenerateurCandidat generateur) {
+        this.generateur = generateur;
+    }
 
-    public ComparateurNom getComparateur() { return comparateur; }
-    public void setComparateur(ComparateurNom comparateur) { this.comparateur = comparateur; }
+    public ComparateurNom getComparateur() {
+        return comparateur;
+    }
+    public void setComparateur(ComparateurNom comparateur) {
+        this.comparateur = comparateur;
+    }
 }

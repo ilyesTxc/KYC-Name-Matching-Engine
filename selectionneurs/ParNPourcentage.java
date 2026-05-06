@@ -1,30 +1,48 @@
 package kyc.selectionneurs;
 
+import kyc.selectionneurs.SelectionMatching;
 import kyc.model.Nom;
 import kyc.model.CoupleValeur;
 import kyc.model.Resultat;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.ArrayList;
 
-public class ParNPourcentage implements SelectionMatching {
-    private double n;
-    public ParNPourcentage(double n) {
-        this.n = n;
-    }
-    public List<Resultat> selectionner(Nom nomClient, List<CoupleValeur> couples) {
-        List<Resultat> result = new ArrayList<>();
-        if (couples == null) return result;
-        int limit = (int) Math.round(couples.size() * n / 100.0);
-        couples.sort(Comparator.comparingDouble((CoupleValeur couple)  -> couple.getScore()).reversed());
-        for (int i = 0; i < limit; i++) {
-            CoupleValeur couple = couples.get(i);
-            result.add(new Resultat(nomClient, couple.getNom(), couple.getScore(), ""));
+
+public class ParNPourcentage implements SelectionMatching{
+    private final double pourcentage;
+
+    public ParNPourcentage(double pourcentage) {
+        if(pourcentage < 0.0 ) {
+            this.pourcentage = 0.0;
+        }else if(pourcentage > 100.0){
+            this.pourcentage = 100.0;
+        }else{
+            this.pourcentage = pourcentage;
         }
-        return result;
     }
 
+    public List<Resultat> selectionner(Nom nomClient, List<CoupleValeur> couples) {
+        List<Resultat> resultats = new ArrayList<>();
+
+        if(couples == null || couples.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        List<CoupleValeur> couplesTri = new ArrayList<>(couples);
+
+        couplesTri.sort(Comparator.comparingDouble(CoupleValeur::getScore).reversed());
+
+        int limit = (int) Math.ceil((pourcentage/100) * couplesTri.size());
+        limit = Math.min(limit,couplesTri.size());
+
+        for(int i = 0 ; i<limit; i++){
+            CoupleValeur c = couplesTri.get(i);
+            resultats.add(new Resultat(nomClient, c.getNom(), c.getScore(),""));
+        }
+
+        return resultats;
+    }
 }
-
-
-

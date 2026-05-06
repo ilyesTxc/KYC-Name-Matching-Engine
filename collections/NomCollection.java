@@ -6,11 +6,7 @@ import kyc.model.Nom;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Collection de Nom basée sur ArrayList.
- * Utilisée pour stocker les listes de noms clients et noms de sanctions.
- * ArrayList choisie car l'accès par index et l'ordre d'insertion sont importants.
- */
+
 public class NomCollection implements CollectionKYC<Nom> {
 
     private final List<Nom> noms = new ArrayList<>();

@@ -9,9 +9,11 @@ import java.util.ArrayList;
 
 public class ParNPremier implements SelectionMatching {
     private int n;
+
     public ParNPremier(int n){
         this.n=n;
     }
+
     public List<Resultat> selectionner(Nom nomClient, List<CoupleValeur> couples){
         List<Resultat> resultats = new ArrayList<>();
         if (couples == null || couples.isEmpty()){

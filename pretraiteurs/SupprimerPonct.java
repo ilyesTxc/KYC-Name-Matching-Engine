@@ -16,6 +16,6 @@ public class SupprimerPonct implements PreTraiteurNom{
             nom=nom.replaceAll("[^\\p{L}\\p{N}\\s]","");
             results.add(nom);
         }
-        return resultat;
+        return results;
     }
 }
