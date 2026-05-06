@@ -9,6 +9,13 @@ public class CoupleValeur {
         this.score = score;
     }
 
-    public Nom getNom() { return nom; }
-    public double getScore() { return score; }
+    public Nom getNom() 
+    { 
+        return nom;
+    }
+    
+    public double getScore() 
+    { 
+        return score; 
+    }
 }

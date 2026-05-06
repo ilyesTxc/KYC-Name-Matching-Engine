@@ -4,7 +4,6 @@ import kyc.model.Nom;
 import java.util.*;
 import java.util.TreeMap;
 
-
 public class IndexPrefixArbre{
     private final TreeMap<Integer, Set<Nom>> index;
     private final int tailleListeSanctions;
