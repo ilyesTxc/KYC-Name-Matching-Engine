@@ -30,6 +30,12 @@ public class MoteurDeRecherche {
             return new ArrayList<>();
         }
 
+        // DEBUG
+        System.out.println("DEBUG — comparateur: " + config.getComparateur());
+        System.out.println("DEBUG — strategie: " + config.getStrategie());
+        System.out.println("DEBUG — preTraiteur: " + config.getPreTraiteur());
+        System.out.println("DEBUG — clients: " + listeClients.size() + " | sanctions: " + listeSanctions.size());
+
         pretraiter(listeSanctions);
         pretraiter(listeClients);
 
@@ -49,7 +55,6 @@ public class MoteurDeRecherche {
             System.out.println("Pipeline terminé : aucune alerte détectée !" );
         } else {
             System.out.printf("Moteur %d alertes(s) détectée(s) ! %n", toutesAlertes.size());
-            if (livreur != null ) livreur.livrer();
         }
         return toutesAlertes;
     }
