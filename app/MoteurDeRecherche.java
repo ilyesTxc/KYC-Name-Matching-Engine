@@ -30,12 +30,6 @@ public class MoteurDeRecherche {
             return new ArrayList<>();
         }
 
-        // DEBUG
-        System.out.println("DEBUG — comparateur: " + config.getComparateur());
-        System.out.println("DEBUG — strategie: " + config.getStrategie());
-        System.out.println("DEBUG — preTraiteur: " + config.getPreTraiteur());
-        System.out.println("DEBUG — clients: " + listeClients.size() + " | sanctions: " + listeSanctions.size());
-
         pretraiter(listeSanctions);
         pretraiter(listeClients);
 
