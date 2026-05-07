@@ -5,7 +5,6 @@ import kyc.app.GenerateurCandidat;
 import kyc.model.Nom;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import kyc.app.IndexPhonetique;
 
 public class ClePhonetique implements GenerateurCandidat{
