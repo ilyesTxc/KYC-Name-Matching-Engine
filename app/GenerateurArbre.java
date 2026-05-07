@@ -6,12 +6,10 @@ import java.util.*;
 
 public class GenerateurArbre implements GenerateurCandidat {
     private static final int  toleranceDefault = 2;
-    private final Nom nomClient;
     private final IndexPrefixArbre index;
     private final int tolerance;
 
-    GenerateurArbre(Nom nomClient, IndexPrefixArbre index,int tolerance){
-        this.nomClient =nomClient;
+    GenerateurArbre(IndexPrefixArbre index,int tolerance){
         this.index= index;
         if(tolerance < 0){
             this.tolerance = 1;
@@ -21,24 +19,23 @@ public class GenerateurArbre implements GenerateurCandidat {
     }
 
     // use default tolerance of 2
-    GenerateurArbre(Nom nomClient, IndexPrefixArbre index){
-        this.nomClient =nomClient;
+    GenerateurArbre(IndexPrefixArbre index){
         this.index= index;
         this.tolerance = toleranceDefault;
     }
 
-    public List<Nom> genererCandidats(Nom nomClient, List<Nom> listSanctionnes){
-        List<String> tokens = nomClient.getNomPretraite();
-
-        if(tokens == null || tokens.isEmpty()){
-            return Collections.emptyList();
+    public Map<Nom, List<Nom>> genererCandidats(List<Nom> clients, List<Nom> listSanctionnes) {
+        Map<Nom, List<Nom>> result = new LinkedHashMap<>();
+        for (Nom client : clients) {
+            List<String> tokens = client.getNomPretraite();
+            if (tokens == null || tokens.isEmpty()) {
+                result.put(client, Collections.emptyList());
+                continue;
+            }
+            int longueur = index.longeur(tokens);
+            result.put(client, new ArrayList<>(index.RechercherParLongeur(longueur, tolerance)));
         }
-
-        int longeurClient = index.longeur(tokens);
-
-        Set<Nom> candidats = index.RechercherParLongeur(longeurClient,tolerance);
-
-        return new ArrayList<>(candidats);
+        return result;
     }
 
 

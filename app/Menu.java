@@ -16,15 +16,17 @@ import kyc.selectionneurs.ParNPourcentage;
 import kyc.selectionneurs.ParNPremier;
 import kyc.selectionneurs.ParSeuil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Menu {
     private Configuration config;
     private ListManager listManager;
-    private List<Resultat> derniersResultats;
     private Scanner scanner;
     private int idCounter = 1;
+
 
     public Menu(Configuration config, ListManager listManager) {
         this.config = config;
@@ -37,14 +39,14 @@ public class Menu {
         while (continuer) {
             System.out.println("Moteur De Recherche De Noms");
             System.out.println("0. Charger un fichier CSV");
-            System.out.println("1. Ajouter un client");
+            System.out.println("1. Ajouter liste de client");
             System.out.println("2. Ajouter une sanction");
             System.out.println("3. Lancer le pipeline");
             System.out.println("4. Afficher le rapport");
             System.out.println("5. Gérer la configuration");
             System.out.println("6. Voir les fichiers CSV chargés");
             System.out.println("7. Quitter");
-            System.out.println("Votre chois : ");
+            System.out.println("Votre choix : ");
             String choix = scanner.nextLine().trim();
 
             switch (choix) {
@@ -52,7 +54,7 @@ public class Menu {
                     chargerCSV();
                     break;
                 case "1":
-                    ajouter(demanderNom(), listManager.getListeClients());
+                    chargerListeClient();
                     break;
                 case "2":
                     ajouter(demanderNom(), listManager.getListeSanctions());
@@ -101,6 +103,8 @@ public class Menu {
         System.out.println("Liste mise à jour :" + liste.size() + " nom(s) réinitialisé(s).");
     }
 
+    private Map<Nom, List<Resultat>> derniersResultats;
+
     private void lancerPipeline() {
         MoteurDeRecherche moteur = new MoteurDeRecherche(config, listManager, null);
         derniersResultats = moteur.lancerPipeline();
@@ -111,19 +115,35 @@ public class Menu {
 
     public void rapport() {
         if (derniersResultats == null || derniersResultats.isEmpty()) {
-            System.out.println("Aucun résultat disponible. Lancez le pipeline d'abord. ");
+            System.out.println("Aucun résultat disponible. Lancez le pipeline d'abord.");
             return;
         }
-        System.out.println("Rapport des alertes : ");
-        for (Resultat r : derniersResultats) {
-            System.out.printf("Client: %-20s | Sanctions: %-20s | Score: %.2f%n", r.getNomClient().getNomOriginal(), r.getNomSanction().getNomOriginal(), r.getScore());
+        int total = 0;
+        System.out.println("Rapport des alertes :");
+        for (Map.Entry<Nom, List<Resultat>> entry : derniersResultats.entrySet()) {
+            String client = entry.getKey().getNomOriginal();
+            List<Resultat> alertes = entry.getValue();
+            if (alertes.isEmpty()) {
+                System.out.printf("  %s → aucune correspondance%n", client);
+            } else {
+                for (Resultat r : alertes) {
+                    System.out.printf("  Client: %-20s | Sanction: %-20s | Score: %.2f%n",
+                            client, r.getNomSanction().getNomOriginal(), r.getScore());
+                    total++;
+                }
+            }
         }
-        System.out.println("Toltal : " + derniersResultats.size() + "alerte(s) !");
+
+        System.out.println("Total : " + total + " alerte(s) !");
 
         System.out.println("\nExporter en CSV ? (o/n) :");
         if (scanner.nextLine().trim().equalsIgnoreCase("o")) {
-            ExportCSV export = new ExportCSV(derniersResultats);
-            export.livrer();
+
+            List<Resultat> flat = new ArrayList<>();
+            for (List<Resultat> alertes : derniersResultats.values()) {
+                flat.addAll(alertes);
+            }
+            new ExportCSV(flat).livrer();
             System.out.println("Export effectué !");
         }
     }
@@ -235,6 +255,13 @@ public class Menu {
             default:
                 System.out.println("Choix invalide, générateur inchangé");
         }
+    }
+
+    private void chargerListeClient() {
+        System.out.println("Entrez le chemin du fichier CSV des clients:");
+        String path = scanner.nextLine().trim();
+        listManager.loadCSVAsClients(path);
+        listManager.afficherStats();
     }
 
     private void chargerCSV() {

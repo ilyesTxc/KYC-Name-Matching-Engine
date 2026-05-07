@@ -5,30 +5,24 @@ import kyc.app.GenerateurCandidat;
 import kyc.model.Nom;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import kyc.app.IndexPhonetique;
+
 
 public class ClePhonetique implements GenerateurCandidat{
-
-    private final List<String> clientCodes;
     private final IndexPhonetique index;
 
-    ClePhonetique(Nom nomClient, IndexPhonetique index){
-        this.clientCodes =IndexPhonetique.encoderTokens(nomClient);
+    ClePhonetique(IndexPhonetique index){
         this.index =index;
     }
 
-    public List<Nom> genererCandidats(Nom nomClient, List<Nom> listSanctionnes){
-        Set<Nom> candidats =new LinkedHashSet<>();
-
-        for (String code : clientCodes) {
-            candidats.addAll(index.getBucket(code));
+    public Map<Nom, List<Nom>> genererCandidats(List<Nom> clients, List<Nom> listSanctionnes) {
+        Map<Nom, List<Nom>> result = new LinkedHashMap<>();
+        for (Nom client : clients) {
+            Set<Nom> candidats = new LinkedHashSet<>();
+            for (String code : IndexPhonetique.encoderTokens(client)) {
+                candidats.addAll(index.getBucket(code));
+            }
+            result.put(client, new ArrayList<>(candidats));
         }
-
-        return new ArrayList<>(candidats);
-    }
-
-    public List<String> getClientCodes() {
-        return clientCodes;
+        return result;
     }
 }
