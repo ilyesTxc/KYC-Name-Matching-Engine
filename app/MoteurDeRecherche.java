@@ -30,19 +30,26 @@ public class MoteurDeRecherche {
             return new ArrayList<>();
         }
 
-        // DEBUG
-        System.out.println("DEBUG — comparateur: " + config.getComparateur());
-        System.out.println("DEBUG — strategie: " + config.getStrategie());
-        System.out.println("DEBUG — preTraiteur: " + config.getPreTraiteur());
-        System.out.println("DEBUG — clients: " + listeClients.size() + " | sanctions: " + listeSanctions.size());
-
         pretraiter(listeSanctions);
         pretraiter(listeClients);
 
+        IndexPhonetique indexPhonetique = new IndexPhonetique(listeSanctions);
+        IndexPrefixArbre indexArbre = new IndexPrefixArbre(listeSanctions);
+
         List<Resultat> toutesAlertes = new ArrayList<>();
+
         for (Nom nomClient : listeClients) {
-            List<Nom> candidats = genererCandidats(nomClient, listeSanctions);
-            if (candidats.isEmpty()) continue;
+            GenerateurCandidat generateur = switch (config.getGenerateurType()) {
+                case PHONETIQUE -> new ClePhonetique(nomClient, indexPhonetique);
+                case ARBRE      -> new GenerateurArbre(nomClient, indexArbre);
+            };
+
+            List<Nom> candidats = generateur != null ? generateur.genererCandidats(nomClient, listeSanctions) : listeSanctions;
+
+            if (candidats.isEmpty()) {
+                continue;
+            }
+
             List<CoupleValeur> couples = comparer(nomClient, candidats);
 
             if (config.getStrategie() != null) {

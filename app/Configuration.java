@@ -10,8 +10,12 @@ public class Configuration {
     private PreTraiteurNom preTraiteur;
     private GenerateurCandidat generateur;
     private ComparateurNom comparateur;
+    public enum GenerateurType { PHONETIQUE, ARBRE }
 
-    public double getSeuil() { return seuil; }
+
+    public double getSeuil() {
+        return seuil;
+    }
     public void setSeuil(double seuil) {
         this.seuil = seuil;
     }
@@ -28,6 +32,15 @@ public class Configuration {
     }
     public void setPreTraiteur(PreTraiteurNom preTraiteur) {
         this.preTraiteur = preTraiteur;
+    }
+    private GenerateurType generateurType = GenerateurType.PHONETIQUE;
+
+    public GenerateurType getGenerateurType() {
+        return generateurType;
+    }
+
+    public void setGenerateurType(GenerateurType t) {
+        this.generateurType = t;
     }
 
     public GenerateurCandidat getGenerateur() {
