@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class ListManager {
     private final List<Nom> listeClients = new ArrayList<>();
     private final List<Nom> listeSanctions = new ArrayList<>();
+    private final List<String> fichiersCharges = new ArrayList<>();
     private int compteur = 0;
 
     public void ajouterClient(Nom nom) {
@@ -47,6 +48,7 @@ public class ListManager {
         } catch (IOException i) {
             System.out.println("Erreur lecture CSV : " + i.getMessage());
         }
+        fichiersCharges.add(path);
     }
 
     public List<Nom> getListeClients() {
@@ -55,6 +57,10 @@ public class ListManager {
 
     public List<Nom> getListeSanctions() {
         return listeSanctions;
+    }
+
+    public List<String> getFichiersCharges() {
+        return fichiersCharges;
     }
 
     public boolean estVide() {

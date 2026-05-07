@@ -17,6 +17,7 @@ public class ClePhonetique implements GenerateurCandidat{
         this.clientCodes =IndexPhonetique.encoderTokens(nomClient);
         this.index =index;
     }
+
     public List<Nom> genererCandidats(Nom nomClient, List<Nom> listSanctionnes){
         Set<Nom> candidats =new LinkedHashSet<>();
 

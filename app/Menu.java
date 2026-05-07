@@ -12,6 +12,7 @@ import kyc.model.Resultat;
 import kyc.pretraiteurs.AccentRemover;
 import kyc.pretraiteurs.LowerCase;
 import kyc.pretraiteurs.Normalizer;
+import kyc.selectionneurs.ParNPourcentage;
 import kyc.selectionneurs.ParNPremier;
 import kyc.selectionneurs.ParSeuil;
 
@@ -41,9 +42,9 @@ public class Menu {
             System.out.println("3. Lancer le pipeline");
             System.out.println("4. Afficher le rapport");
             System.out.println("5. Gérer la configuration");
-            System.out.println("6. Quitter");
+            System.out.println("6. Voir les fichiers CSV chargés");
+            System.out.println("7. Quitter");
             System.out.println("Votre chois : ");
-
             String choix = scanner.nextLine().trim();
 
             switch (choix) {
@@ -66,6 +67,9 @@ public class Menu {
                     genererConfig();
                     break;
                 case "6":
+                    afficherFichierCSV();
+                    break;
+                case "7":
                     quitter();
                     continuer = false;
                     break;
@@ -130,6 +134,7 @@ public class Menu {
         System.out.println("2. Comparateur : Levenshtein");
         System.out.println("3. Comparateur : JaroWinkler");
         System.out.println("Choisir le comparateur : ");
+
         String choix = scanner.nextLine().trim();
         switch (choix) {
             case "1":
@@ -165,6 +170,7 @@ public class Menu {
 
         System.out.println("\n1. Sélection : ParSeuil");
         System.out.println("2. Sélection : Par N Premiers");
+        System.out.println("3. Sélection : ParNPourcentage");
         System.out.println("Choisir la stratégie : ");
         choix = scanner.nextLine().trim();
         switch (choix) {
@@ -180,6 +186,13 @@ public class Menu {
                 config.setStrategie(new ParNPremier(n));
                 System.out.println("Stratégie : ParNPremier(" + n +")");
                 break;
+            case "3":
+                System.out.println("Entrez le pourcentage (ex: 20.0) :");
+                double p = Double.parseDouble(scanner.nextLine().trim());
+                config.setStrategie(new ParNPourcentage(p));
+                System.out.println("Stratégie : ParNPourcentage(" + p + "%)");
+                break;
+
             default:
                 System.out.println("Choix invalide, stratégie inchnagée ");
         }
@@ -205,6 +218,23 @@ public class Menu {
             default:
                 System.out.println("Choix invalide, prétraitement inchangé ");
         }
+        System.out.println("1. Générateur : Clé Phonétique");
+        System.out.println("2. Générateur : Arbre Préfixe");
+        System.out.println("Choisir le générateur :");
+        choix = scanner.nextLine().trim();
+
+        switch (choix) {
+            case "1":
+                config.setGenerateurType(Configuration.GenerateurType.PHONETIQUE);
+                System.out.println("Générateur : Clé Phonétique");
+                break;
+            case "2":
+                config.setGenerateurType(Configuration.GenerateurType.ARBRE);
+                System.out.println("Générateur : Arbre Préfixe");
+                break;
+            default:
+                System.out.println("Choix invalide, générateur inchangé");
+        }
     }
 
     private void chargerCSV() {
@@ -212,6 +242,23 @@ public class Menu {
         String path = scanner.nextLine().trim();
         listManager.loadCSV(path);
         listManager.afficherStats();
+    }
+
+    private void afficherFichierCSV(){
+        List<String> fichiers = listManager.getFichiersCharges();
+        if(fichiers == null ){
+            System.out.println("Aucun fichier est chargé.");
+        }
+
+        System.out.println("Fichier CSV chargés :");
+
+        for(int i =0; i<fichiers.size();i++){
+            System.out.printf("  %d. %s%n", i + 1, fichiers.get(i));
+        }
+
+        System.out.printf("Total : %d fichier(s) | Clients : %d | Sanctions : %d%n", fichiers.size(),
+                listManager.getListeClients().size(),
+                listManager.getListeSanctions().size());
     }
 
     public void quitter() {
