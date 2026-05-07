@@ -22,6 +22,7 @@ public class ListManager {
             System.out.println("Chemin CSV invalide.");
             return;
         }
+
         int added = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
@@ -49,6 +50,32 @@ public class ListManager {
             System.out.println("Erreur lecture CSV : " + i.getMessage());
         }
         fichiersCharges.add(path);
+    }
+
+    public void loadCSVAsClients(String path) {
+        if (path == null || path.isBlank()) {
+            System.out.println("Chemin CSV invalide.");
+            return;
+        }
+        int added = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line;
+            int lineNumber = 0;
+            while ((line = br.readLine()) != null) {
+                lineNumber++;
+                line = line.trim();
+                if (line.isEmpty() || line.startsWith("#")) continue;
+                String[] parts = line.split(",", 2);
+                if (parts.length < 2) continue;
+                String nomStr = parts[1].trim();
+                if (nomStr.isEmpty()) continue;
+                listeClients.add(new Nom(++compteur, nomStr));
+                added++;
+            }
+            System.out.printf("%d client(s) chargé(s) depuis : %s%n", added, path);
+        } catch (IOException i) {
+            System.out.println("Erreur lecture CSV : " + i.getMessage());
+        }
     }
 
     public List<Nom> getListeClients() {
