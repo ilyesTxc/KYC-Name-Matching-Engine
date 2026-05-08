@@ -12,6 +12,8 @@ import kyc.model.Resultat;
 import kyc.pretraiteurs.AccentRemover;
 import kyc.pretraiteurs.LowerCase;
 import kyc.pretraiteurs.Normalizer;
+import kyc.pretraiteurs.NGram;
+import kyc.pretraiteurs.SupprimerPonct;
 import kyc.selectionneurs.ParNPourcentage;
 import kyc.selectionneurs.ParNPremier;
 import kyc.selectionneurs.ParSeuil;
@@ -218,8 +220,10 @@ public class Menu {
         }
 
         System.out.println("\n1. Prétraitement : Normalizer");
-        System.out.println("2. Prétraiement : LowerCase");
+        System.out.println("2. Prétraitement : LowerCase");
         System.out.println("3. Prétraitement : AccentRemover");
+        System.out.println("4. Prétraitement : NGram");
+        System.out.println("5. Prétraitement : SupprimerPonct");
         System.out.println("Choisir le prétraitement");
         choix = scanner.nextLine().trim();
         switch (choix) {
@@ -235,11 +239,22 @@ public class Menu {
                 config.setPreTraiteur(new AccentRemover());
                 System.out.println("Prétraiement : AccentRemover");
                 break;
+            case "4":
+                System.out.println("Entrez un entier N pour NGram (exemple: 2) :");
+                int ngramSize = Integer.parseInt(scanner.nextLine().trim());
+                config.setPreTraiteur(new NGram(ngramSize));
+                System.out.println("Prétraitement : NGram(" + ngramSize + ")");
+                break;
+            case "5":
+                config.setPreTraiteur(new SupprimerPonct());
+                System.out.println("Prétraitement : SupprimerPonct");
+                break;
             default:
                 System.out.println("Choix invalide, prétraitement inchangé ");
         }
         System.out.println("1. Générateur : Clé Phonétique");
         System.out.println("2. Générateur : Arbre Préfixe");
+        System.out.println("3. Générateur : Brut");
         System.out.println("Choisir le générateur :");
         choix = scanner.nextLine().trim();
 
@@ -251,6 +266,9 @@ public class Menu {
             case "2":
                 config.setGenerateurType(Configuration.GenerateurType.ARBRE);
                 System.out.println("Générateur : Arbre Préfixe");
+                break;
+            case "3":
+                config.setGenerateurType(Configuration.GenerateurType.BRUT);
                 break;
             default:
                 System.out.println("Choix invalide, générateur inchangé");
