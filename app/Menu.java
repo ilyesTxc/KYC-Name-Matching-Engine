@@ -40,9 +40,9 @@ public class Menu {
         boolean continuer = true;
         while (continuer) {
             System.out.println("Moteur De Recherche De Noms");
-            System.out.println("0. Charger un fichier CSV");
+            System.out.println("0. Charger un fichier CSV des sanctions ");
             System.out.println("1. Ajouter liste de client");
-            System.out.println("2. Ajouter une sanction");
+            System.out.println("2. Ajouter une liste de sanction");
             System.out.println("3. Lancer le pipeline");
             System.out.println("4. Afficher le rapport");
             System.out.println("5. Gérer la configuration");
@@ -279,7 +279,7 @@ public class Menu {
         }
         System.out.println("1. Générateur : Clé Phonétique");
         System.out.println("2. Générateur : Arbre Préfixe");
-        System.out.println("3. Générateur : Brut");
+        System.out.println("3. Générateur : Prefixe Hash");
         System.out.println("Choisir le générateur :");
         choix = scanner.nextLine().trim();
 
@@ -293,8 +293,8 @@ public class Menu {
                 System.out.println("Générateur : Arbre Préfixe");
                 break;
             case "3":
-                config.setGenerateurType(Configuration.GenerateurType.BRUT);
-                System.out.println("Générateur : Brut");
+                config.setGenerateurType(Configuration.GenerateurType.PREFIX_HASH);
+                System.out.println("Générateur : Préfixe Hash");
                 break;
             default:
                 System.out.println("Choix invalide, générateur inchangé");
@@ -331,6 +331,7 @@ public class Menu {
                 listManager.getListeClients().size(),
                 listManager.getListeSanctions().size());
     }
+
 
     public void quitter() {
         System.out.println("Au revoir ");
