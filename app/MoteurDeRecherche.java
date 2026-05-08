@@ -14,16 +14,21 @@ public class MoteurDeRecherche {
     private ListManager listManager;
     private LivreurResultat livreur;
 
+    private long tempsPretraitementMS;
+    private long tempsPipelineTotalMs;
+
     public MoteurDeRecherche(Configuration config, ListManager listManager, LivreurResultat livreur) {
         this.config = config;
         this.listManager = listManager;
         this.livreur = livreur;
     }
 
+    public long getTempsPretraitementMS() {return tempsPretraitementMS; }
+    public long getTempsPipelineTotalMs() { return tempsPipelineTotalMs; }
 
-    public Map<Nom, List<Resultat>> lancerPipeline() {
-        List<Nom> listeClients = listManager.getListeClients();
-        List<Nom> listeSanctions = listManager.getListeSanctions();
+
+    public Map<Nom, List<Resultat>> lancerPipeline(List<Nom> listeClients, List<Nom> listeSanctions) {
+        long debutTotal = System.nanoTime();
 
         if (listeClients.isEmpty()) {
             System.out.println("Aucun nom client à traiter.");
@@ -34,8 +39,12 @@ public class MoteurDeRecherche {
             return new LinkedHashMap<>();
         }
 
+        long debutPretraitement = System.nanoTime();
+
         pretraiter(listeSanctions);
         pretraiter(listeClients);
+
+        tempsPretraitementMS = (System.nanoTime()- debutPretraitement)/1_000_000;
 
         IndexPhonetique indexPhonetique = new IndexPhonetique(listeSanctions);
         IndexPrefixArbre indexArbre = new IndexPrefixArbre(listeSanctions);
@@ -49,7 +58,6 @@ public class MoteurDeRecherche {
                 ? generateur.genererCandidats(listeClients, listeSanctions)
                 : null;
 
-        // One entry per client, even if no matches
         Map<Nom, List<Resultat>> resultatsParClient = new LinkedHashMap<>();
         for (Nom nomClient : listeClients) {
             resultatsParClient.put(nomClient, new ArrayList<>());
@@ -67,6 +75,8 @@ public class MoteurDeRecherche {
                 traiterClient(nomClient, listeSanctions, resultatsParClient.get(nomClient));
             }
         }
+
+        tempsPipelineTotalMs = (System.nanoTime()-debutTotal)/1_000_000;
 
         int totalAlertes = 0;
         for (List<Resultat> alertes : resultatsParClient.values()) {
@@ -116,4 +126,5 @@ public class MoteurDeRecherche {
         }
         return couples;
     }
+
 }
