@@ -1,24 +1,45 @@
 package kyc.app;
 import kyc.selectionneurs.SelectionMatching;
+import kyc.selectionneurs.ParSeuil;
 import kyc.pretraiteurs.PreTraiteurNom;
+import kyc.pretraiteurs.Normalizer;
 import kyc.comparateurs.ComparateurNom;
+import kyc.comparateurs.JaroWinkler;
+import kyc.model.Nom;
+import java.util.List;
 
 
 public class Configuration {
-    private double seuil;
+    public enum GenerateurType {PHONETIQUE, ARBRE}
+
     private SelectionMatching strategie;
     private PreTraiteurNom preTraiteur;
     private GenerateurCandidat generateur;
     private ComparateurNom comparateur;
-    public enum GenerateurType { PHONETIQUE, ARBRE }
+    private GenerateurType generateurType;
 
+    public Configuration() {
+        this.comparateur = new ComparateurNom() {
+            private final JaroWinkler jw = new JaroWinkler();
 
-    public double getSeuil() {
-        return seuil;
+            public double comparer(Nom n1, Nom n2) {
+                String s1 = String.join(" ", n1.getNomPretraite() != null ? n1.getNomPretraite() : List.of(n1.getNomOriginal().split("\\s+")));
+                String s2 = String.join(" ", n2.getNomPretraite() != null ? n2.getNomPretraite() : List.of(n2.getNomOriginal().split("\\s+")));
+                return jw.comparerChaine(s1, s2);
+            }
+        };
+        this.strategie = new ParSeuil(0.8);
+        this.preTraiteur = new Normalizer();
+        this.generateurType = GenerateurType.PHONETIQUE;
     }
-    public void setSeuil(double seuil) {
-        this.seuil = seuil;
+
+    public ComparateurNom getComparateur() {
+        return comparateur;
     }
+    public void setComparateur(ComparateurNom comparateur) {
+        this.comparateur = comparateur;
+    }
+
 
     public SelectionMatching getStrategie() {
         return strategie;
@@ -33,12 +54,11 @@ public class Configuration {
     public void setPreTraiteur(PreTraiteurNom preTraiteur) {
         this.preTraiteur = preTraiteur;
     }
-    private GenerateurType generateurType = GenerateurType.PHONETIQUE;
+
 
     public GenerateurType getGenerateurType() {
         return generateurType;
     }
-
     public void setGenerateurType(GenerateurType t) {
         this.generateurType = t;
     }
@@ -50,10 +70,7 @@ public class Configuration {
         this.generateur = generateur;
     }
 
-    public ComparateurNom getComparateur() {
-        return comparateur;
-    }
-    public void setComparateur(ComparateurNom comparateur) {
-        this.comparateur = comparateur;
+    public String afficherConfig() {
+        return String.format("Config active -> Comparateur : %s | Stratégie : %s | Prétraiteur : %s | Générateur : %s", comparateur.getClass().getSimpleName(), strategie.toString(), preTraiteur.getClass().getSimpleName(), generateurType);
     }
 }

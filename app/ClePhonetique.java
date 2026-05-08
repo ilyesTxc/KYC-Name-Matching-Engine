@@ -15,9 +15,9 @@ public class ClePhonetique implements GenerateurCandidat{
         this.index =index;
     }
 
-    public Map<Nom, List<Nom>> genererCandidats(List<Nom> clients, List<Nom> listSanctionnes) {
+    public Map<Nom, List<Nom>> genererCandidats(List<Nom> ListeGauche, List<Nom> listeDroite) {
         Map<Nom, List<Nom>> result = new LinkedHashMap<>();
-        for (Nom client : clients) {
+        for (Nom client : ListeGauche) {
             Set<Nom> candidats = new LinkedHashSet<>();
             for (String code : IndexPhonetique.encoderTokens(client)) {
                 candidats.addAll(index.getBucket(code));
