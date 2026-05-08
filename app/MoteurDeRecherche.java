@@ -39,17 +39,18 @@ public class MoteurDeRecherche {
 
         IndexPhonetique indexPhonetique = new IndexPhonetique(listeSanctions);
         IndexPrefixArbre indexArbre = new IndexPrefixArbre(listeSanctions);
+        IndexPrefixHash indexPrefixHash = new IndexPrefixHash(listeSanctions);
 
         GenerateurCandidat generateur = switch (config.getGenerateurType()) {
             case PHONETIQUE -> new ClePhonetique(indexPhonetique);
-            case ARBRE      -> new GenerateurArbre(indexArbre);
+            case ARBRE  -> new GenerateurArbre(indexArbre);
+            case PREFIX_HASH -> new GenerateurPrefixHash(indexPrefixHash);
         };
 
         Map<Nom, List<Nom>> candidatsParClient = generateur != null
                 ? generateur.genererCandidats(listeClients, listeSanctions)
                 : null;
 
-        // One entry per client, even if no matches
         Map<Nom, List<Resultat>> resultatsParClient = new LinkedHashMap<>();
         for (Nom nomClient : listeClients) {
             resultatsParClient.put(nomClient, new ArrayList<>());
@@ -74,7 +75,7 @@ public class MoteurDeRecherche {
         }
 
         if (totalAlertes == 0) {
-            System.out.println("Pipeline terminé : aucune alerte détectée !");
+            System.out.println("Pipeline terminé: aucune alerte détectée !");
         } else {
             System.out.printf("%d alerte(s) détectée(s) !%n", totalAlertes);
         }

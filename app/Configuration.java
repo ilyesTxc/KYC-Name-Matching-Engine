@@ -10,7 +10,7 @@ public class Configuration {
     private PreTraiteurNom preTraiteur;
     private GenerateurCandidat generateur;
     private ComparateurNom comparateur;
-    public enum GenerateurType { PHONETIQUE, ARBRE }
+    public enum GenerateurType { PHONETIQUE, ARBRE, PREFIX_HASH }
 
 
     public double getSeuil() {
