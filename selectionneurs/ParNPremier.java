@@ -8,10 +8,20 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class ParNPremier implements SelectionMatching {
-    private int n;
+    private final int n;
+    private static final int DEFAULT_N = 10;
+
+    public ParNPremier() {
+        this.n = DEFAULT_N;
+    }
 
     public ParNPremier(int n){
-        this.n=n;
+        if (n<= 0) {
+            System.out.printf("ParNPremier : valeur %d invalide, utilisation de la valeur par défaut (%d).%n", n, DEFAULT_N);
+            this.n = DEFAULT_N;
+        } else {
+            this.n = n;
+        }
     }
 
     public List<Resultat> selectionner(Nom nomClient, List<CoupleValeur> couples){
