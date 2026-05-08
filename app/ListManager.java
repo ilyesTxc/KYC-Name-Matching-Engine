@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class ListManager {
-    private final List<Nom> listeClients = new ArrayList<>();
-    private final List<Nom> listeSanctions = new ArrayList<>();
+    private final List<Nom> listeGauche = new ArrayList<>();
+    private final List<Nom> listeDroite = new ArrayList<>();
     private final List<String> fichiersCharges = new ArrayList<>();
     private int compteur = 0;
 
     public void ajouterClient(Nom nom) {
-        if (nom != null) listeClients.add(nom);
+        if (nom != null) listeGauche.add(nom);
     }
 
     public void loadCSV(String path) {
@@ -38,11 +38,11 @@ public class ListManager {
                     continue;
                 }
 
-                // first column is wikidata id, second is the name
+
                 String nomStr = parts[1].trim();
                 if (nomStr.isEmpty()) continue;
 
-                listeSanctions.add(new Nom(++compteur, nomStr));
+                listeDroite.add(new Nom(++compteur, nomStr));
                 added++;
             }
             System.out.printf("%d sanctions chargées depuis : %s%n", added, path);
@@ -69,7 +69,7 @@ public class ListManager {
                 if (parts.length < 2) continue;
                 String nomStr = parts[1].trim();
                 if (nomStr.isEmpty()) continue;
-                listeClients.add(new Nom(++compteur, nomStr));
+                listeGauche.add(new Nom(++compteur, nomStr));
                 added++;
             }
             System.out.printf("%d client(s) chargé(s) depuis : %s%n", added, path);
@@ -79,11 +79,11 @@ public class ListManager {
     }
 
     public List<Nom> getListeClients() {
-        return listeClients;
+        return listeGauche;
     }
 
     public List<Nom> getListeSanctions() {
-        return listeSanctions;
+        return listeDroite;
     }
 
     public List<String> getFichiersCharges() {
@@ -91,11 +91,11 @@ public class ListManager {
     }
 
     public boolean estVide() {
-        return listeClients.isEmpty() && listeSanctions.isEmpty();
+        return listeGauche.isEmpty() && listeDroite.isEmpty();
     }
 
     public void afficherStats() {
-        System.out.printf("Client : %d | Sanctions : %d%n", listeClients.size(), listeSanctions.size());
+        System.out.printf("Client : %d | Sanctions : %d%n", listeGauche.size(), listeDroite.size());
     }
 }
 

@@ -12,6 +12,8 @@ import kyc.model.Resultat;
 import kyc.pretraiteurs.AccentRemover;
 import kyc.pretraiteurs.LowerCase;
 import kyc.pretraiteurs.Normalizer;
+import kyc.pretraiteurs.NGram;
+import kyc.pretraiteurs.SupprimerPonct;
 import kyc.selectionneurs.ParNPourcentage;
 import kyc.selectionneurs.ParNPremier;
 import kyc.selectionneurs.ParSeuil;
@@ -107,9 +109,34 @@ public class Menu {
 
     private void lancerPipeline() {
         MoteurDeRecherche moteur = new MoteurDeRecherche(config, listManager, null);
-        derniersResultats = moteur.lancerPipeline();
+        derniersResultats = moteur.lancerPipeline(listManager.getListeClients(), listManager.getListeSanctions());
         if (derniersResultats != null && !derniersResultats.isEmpty()) {
             new AfficherConsole(derniersResultats).livrer();
+        }
+        if (derniersResultats != null) {
+            int totalClients = derniersResultats.size();
+            int clientMatch = 0;
+            double score = 0;
+            int totalAlert = 0;
+
+            for (List<Resultat> alertes : derniersResultats.values()) {
+                if (!alertes.isEmpty()) {
+                    clientMatch++;
+                }
+                for (Resultat r : alertes) {
+                    score += r.getScore();
+                    totalAlert++;
+                }
+            }
+            double scoreMoyen = totalAlert > 0 ? (score / totalAlert) * 100 : 0;
+            System.out.println("\n********** STATISTIQUES *********");
+            System.out.printf("Temps de prétraitement  : %d ms%n", moteur.getTempsPretraitementMS());
+            System.out.printf("Total clients vérifiés  : %d%n", totalClients);
+            System.out.printf("Clients avec matching  : %d%n", clientMatch);
+            System.out.printf("Client sans matching   : %d%n", totalClients - clientMatch);
+            System.out.printf("Score moyen   : %.1f%%%n", scoreMoyen);
+            System.out.printf("Temps total de pipeline   : %d ms%n", moteur.getTempsPipelineTotalMs());
+            System.out.println("**************");
         }
     }
 
@@ -218,22 +245,34 @@ public class Menu {
         }
 
         System.out.println("\n1. Prétraitement : Normalizer");
-        System.out.println("2. Prétraiement : LowerCase");
+        System.out.println("2. Prétraitement : LowerCase");
         System.out.println("3. Prétraitement : AccentRemover");
+        System.out.println("4. Prétraitement : NGram");
+        System.out.println("5. Prétraitement : SupprimerPonct");
         System.out.println("Choisir le prétraitement");
         choix = scanner.nextLine().trim();
         switch (choix) {
             case "1":
                 config.setPreTraiteur(new Normalizer());
-                System.out.println("Prétraiement : Normalizer");
+                System.out.println("Prétraitement : Normalizer");
                 break;
             case "2":
                 config.setPreTraiteur(new LowerCase());
-                System.out.println("Prétraiement : LowerCse");
+                System.out.println("Prétraitement : LowerCase");
                 break;
             case "3":
                 config.setPreTraiteur(new AccentRemover());
-                System.out.println("Prétraiement : AccentRemover");
+                System.out.println("Prétraitement : AccentRemover");
+                break;
+            case "4":
+                System.out.println("Entrez un entier N pour NGram (exemple: 2) :");
+                int ngramSize = Integer.parseInt(scanner.nextLine().trim());
+                config.setPreTraiteur(new NGram(ngramSize));
+                System.out.println("Prétraitement : NGram(" + ngramSize + ")");
+                break;
+            case "5":
+                config.setPreTraiteur(new SupprimerPonct());
+                System.out.println("Prétraitement : SupprimerPonct");
                 break;
             default:
                 System.out.println("Choix invalide, prétraitement inchangé ");
