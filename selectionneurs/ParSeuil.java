@@ -21,6 +21,9 @@ public class ParSeuil implements SelectionMatching{
             this.seuil = seuil;
         }
     }
+    public ParSeuil(){
+        this.seuil = 0.7;
+    }
 
     public List<Resultat> selectionner(Nom nomClient, List<CoupleValeur> couples) {
         List<Resultat> resultats = new ArrayList<>();
