@@ -109,9 +109,34 @@ public class Menu {
 
     private void lancerPipeline() {
         MoteurDeRecherche moteur = new MoteurDeRecherche(config, listManager, null);
-        derniersResultats = moteur.lancerPipeline();
+        derniersResultats = moteur.lancerPipeline(listManager.getListeClients(), listManager.getListeSanctions());
         if (derniersResultats != null && !derniersResultats.isEmpty()) {
             new AfficherConsole(derniersResultats).livrer();
+        }
+        if (derniersResultats != null) {
+            int totalClients = derniersResultats.size();
+            int clientMatch = 0;
+            double score = 0;
+            int totalAlert = 0;
+
+            for (List<Resultat> alertes : derniersResultats.values()) {
+                if (!alertes.isEmpty()) {
+                    clientMatch++;
+                }
+                for (Resultat r : alertes) {
+                    score += r.getScore();
+                    totalAlert++;
+                }
+            }
+            double scoreMoyen = totalAlert > 0 ? (score / totalAlert) * 100 : 0;
+            System.out.println("\n********** STATISTIQUES *********");
+            System.out.printf("Temps de prétraitement  : %d ms%n", moteur.getTempsPretraitementMS());
+            System.out.printf("Total clients vérifiés  : %d%n", totalClients);
+            System.out.printf("Clients avec matching  : %d%n", clientMatch);
+            System.out.printf("Client sans matching   : %d%n", totalClients - clientMatch);
+            System.out.printf("Score moyen   : %.1f%%%n", scoreMoyen);
+            System.out.printf("Temps total de pipeline   : %d ms%n", moteur.getTempsPipelineTotalMs());
+            System.out.println("**************");
         }
     }
 
@@ -229,15 +254,15 @@ public class Menu {
         switch (choix) {
             case "1":
                 config.setPreTraiteur(new Normalizer());
-                System.out.println("Prétraiement : Normalizer");
+                System.out.println("Prétraitement : Normalizer");
                 break;
             case "2":
                 config.setPreTraiteur(new LowerCase());
-                System.out.println("Prétraiement : LowerCse");
+                System.out.println("Prétraitement : LowerCase");
                 break;
             case "3":
                 config.setPreTraiteur(new AccentRemover());
-                System.out.println("Prétraiement : AccentRemover");
+                System.out.println("Prétraitement : AccentRemover");
                 break;
             case "4":
                 System.out.println("Entrez un entier N pour NGram (exemple: 2) :");
@@ -269,6 +294,7 @@ public class Menu {
                 break;
             case "3":
                 config.setGenerateurType(Configuration.GenerateurType.BRUT);
+                System.out.println("Générateur : Brut");
                 break;
             default:
                 System.out.println("Choix invalide, générateur inchangé");
