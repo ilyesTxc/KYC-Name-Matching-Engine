@@ -10,19 +10,19 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ParSeuil implements SelectionMatching{
+    private static final double SEUIL_DEFAUT = 0.7;
     private double seuil;
 
+
     public ParSeuil(double seuil) {
-        if(seuil < 0.0){
-            this.seuil = 0.0;
-        }else if(seuil > 1.0){
-            this.seuil = 1.0;
+        if(seuil < 0.0 || seuil>1.0){
+            this.seuil = SEUIL_DEFAUT;
         }else{
             this.seuil = seuil;
         }
     }
     public ParSeuil(){
-        this.seuil = 0.7;
+        this.seuil = SEUIL_DEFAUT;
     }
 
     public List<Resultat> selectionner(Nom nomClient, List<CoupleValeur> couples) {
@@ -34,7 +34,7 @@ public class ParSeuil implements SelectionMatching{
 
         List<CoupleValeur> coupleTri = new ArrayList<>(couples);
 
-        coupleTri.sort(Comparator.comparingDouble(CoupleValeur::getScore).reversed());
+        coupleTri.sort(Comparator.comparingDouble((CoupleValeur cv)-> cv.getScore()).reversed());
 
         for(CoupleValeur c : coupleTri){
             if(c.getScore() >= seuil){
