@@ -5,7 +5,7 @@ import kyc.model.Nom;
 import java.util.*;
 
 public class GenerateurArbre implements GenerateurCandidat {
-    private static final int  toleranceDefault = 2;
+    private static final int  TOLERANCE_DEFAULT = 2;
     private final IndexPrefixArbre index;
     private final int tolerance;
 
@@ -18,15 +18,15 @@ public class GenerateurArbre implements GenerateurCandidat {
         }
     }
 
-    // use default tolerance of 2
+
     GenerateurArbre(IndexPrefixArbre index){
         this.index= index;
-        this.tolerance = toleranceDefault;
+        this.tolerance = TOLERANCE_DEFAULT;
     }
 
-    public Map<Nom, List<Nom>> genererCandidats(List<Nom> clients, List<Nom> listSanctionnes) {
+    public Map<Nom, List<Nom>> genererCandidats(List<Nom> listeGauche, List<Nom> listeDroite) {
         Map<Nom, List<Nom>> result = new LinkedHashMap<>();
-        for (Nom client : clients) {
+        for (Nom client : listeGauche) {
             List<String> tokens = client.getNomPretraite();
             if (tokens == null || tokens.isEmpty()) {
                 result.put(client, Collections.emptyList());
