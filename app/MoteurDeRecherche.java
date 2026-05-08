@@ -51,7 +51,8 @@ public class MoteurDeRecherche {
 
         GenerateurCandidat generateur = switch (config.getGenerateurType()) {
             case PHONETIQUE -> new ClePhonetique(indexPhonetique);
-            case ARBRE      -> new GenerateurArbre(indexArbre);
+            case ARBRE -> new GenerateurArbre(indexArbre);
+            case BRUT -> new GenerateurBrut();
         };
 
         Map<Nom, List<Nom>> candidatsParClient = generateur != null
