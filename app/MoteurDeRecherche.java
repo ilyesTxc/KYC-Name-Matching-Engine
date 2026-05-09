@@ -54,6 +54,7 @@ public class MoteurDeRecherche {
             case PHONETIQUE -> new ClePhonetique(indexPhonetique);
             case ARBRE  -> new GenerateurArbre(indexArbre);
             case PREFIX_HASH -> new GenerateurPrefixHash(indexPrefixHash);
+            case BRUT -> new GenerateurBrut();
         };
 
         Map<Nom, List<Nom>> candidatsParClient = generateur != null
