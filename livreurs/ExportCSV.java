@@ -20,6 +20,9 @@ public class ExportCSV implements LivreurResultat {
     }
 
     public void exporter(String path) {
+        if (alertes == null || alertes.isEmpty()){
+            System.out.println("Aucune alerte à exporter");
+        }
         try (BufferedWriter writer = new BufferedWriter( new FileWriter(path))){
             writer.write("nomClient,nomSanction,score,fichierSource");
             writer.newLine();
