@@ -42,7 +42,9 @@ public class ListManager {
                 String nomStr = parts[1].trim();
                 if (nomStr.isEmpty()) continue;
 
-                listeDroite.add(new Nom(++compteur, nomStr));
+                Nom n = new Nom(++compteur, nomStr);
+                n.setFichierSource(path);
+                listeDroite.add(n);
                 added++;
             }
             System.out.printf("%d sanctions chargées depuis : %s%n", added, path);
