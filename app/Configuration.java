@@ -80,7 +80,7 @@ public class Configuration {
     public LivreurResultat getLivreur() {
         return livreur;
     }
-    public LivreurResultat setLivreur(LivreurResultat livreur) {
+    public void setLivreur(LivreurResultat livreur) {
         this.livreur = livreur;
 
     }
