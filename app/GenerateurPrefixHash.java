@@ -11,14 +11,14 @@ public class GenerateurPrefixHash implements GenerateurCandidat{
         this.indexPrefixHash = index;
     }
 
-    public Map<Nom, List<Nom>> genererCandidats(List<Nom> Clients, List<Nom> listeSanctions){
+    public Map<Nom, List<Nom>> genererCandidats(List<Nom> listeGauche, List<Nom> listeDroite){
         Map<Nom, List<Nom>> resultats = new LinkedHashMap<>();
 
-        if(Clients == null || Clients.isEmpty()){
+        if(listeGauche == null || listeGauche.isEmpty()){
             return resultats;
         }
 
-        for(Nom c : Clients){
+        for(Nom c : listeGauche){
             Set<Nom> candidats = indexPrefixHash.rechercher(c);
             resultats.put(c, new ArrayList<>(candidats));
         }
