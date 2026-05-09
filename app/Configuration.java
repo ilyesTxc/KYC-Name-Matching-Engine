@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public class Configuration {
-    public enum GenerateurType {PHONETIQUE, ARBRE, PREFIX_HASH}
+    public enum GenerateurType {PHONETIQUE, ARBRE, PREFIX_HASH, BRUT}
 
     private SelectionMatching strategie;
     private PreTraiteurNom preTraiteur;
