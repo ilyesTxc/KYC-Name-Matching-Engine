@@ -37,7 +37,7 @@ public class ParNPremier implements SelectionMatching {
 
         for (int i=0 ; i < limit ; i++){
             CoupleValeur couple = couplesTries.get(i);
-            Resultat resultat = new Resultat(nomClient,couple.getNom(),couple.getScore(), "");
+            Resultat resultat = new Resultat(nomClient,couple.getNom(),couple.getScore(), couple.getNom().getFichierSource());
             resultats.add(resultat);
         }
 
