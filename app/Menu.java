@@ -280,6 +280,7 @@ public class Menu {
         System.out.println("1. Générateur : Clé Phonétique");
         System.out.println("2. Générateur : Arbre Préfixe");
         System.out.println("3. Générateur : Prefixe Hash");
+        System.out.println("4. Générateur : Brut");
         System.out.println("Choisir le générateur :");
         choix = scanner.nextLine().trim();
 
@@ -295,6 +296,10 @@ public class Menu {
             case "3":
                 config.setGenerateurType(Configuration.GenerateurType.PREFIX_HASH);
                 System.out.println("Générateur : Préfixe Hash");
+                break;
+            case "4":
+                config.setGenerateurType(Configuration.GenerateurType.BRUT);
+                System.out.println("Générateur : Brut");
                 break;
             default:
                 System.out.println("Choix invalide, générateur inchangé");
