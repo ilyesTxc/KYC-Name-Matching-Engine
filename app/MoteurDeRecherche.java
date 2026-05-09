@@ -46,37 +46,25 @@ public class MoteurDeRecherche {
 
         tempsPretraitementMS = (System.nanoTime()- debutPretraitement)/1_000_000;
 
-        IndexPhonetique indexPhonetique = new IndexPhonetique(listeSanctions);
-        IndexPrefixArbre indexArbre = new IndexPrefixArbre(listeSanctions);
-        IndexPrefixHash indexPrefixHash = new IndexPrefixHash(listeSanctions);
-
         GenerateurCandidat generateur = switch (config.getGenerateurType()) {
-            case PHONETIQUE -> new ClePhonetique(indexPhonetique);
-            case ARBRE  -> new GenerateurArbre(indexArbre);
-            case PREFIX_HASH -> new GenerateurPrefixHash(indexPrefixHash);
+            case PHONETIQUE -> new ClePhonetique(new IndexPhonetique(listeSanctions));
+            case ARBRE  -> new GenerateurArbre(new IndexPrefixArbre(listeSanctions));
+            case PREFIX_HASH -> new GenerateurPrefixHash(new IndexPrefixHash(listeSanctions));
             case BRUT -> new GenerateurBrut();
         };
 
-        Map<Nom, List<Nom>> candidatsParClient = generateur != null
-                ? generateur.genererCandidats(listeClients, listeSanctions)
-                : null;
+        Map<Nom, List<Nom>> candidatsParClient = generateur.genererCandidats(listeClients, listeSanctions);
 
         Map<Nom, List<Resultat>> resultatsParClient = new LinkedHashMap<>();
         for (Nom nomClient : listeClients) {
             resultatsParClient.put(nomClient, new ArrayList<>());
         }
 
-        if (candidatsParClient != null) {
-            for (Map.Entry<Nom, List<Nom>> entry : candidatsParClient.entrySet()) {
-                Nom nomClient = entry.getKey();
-                List<Nom> candidats = entry.getValue();
-                if (candidats.isEmpty()) continue;
-                traiterClient(nomClient, candidats, resultatsParClient.get(nomClient));
-            }
-        } else {
-            for (Nom nomClient : listeClients) {
-                traiterClient(nomClient, listeSanctions, resultatsParClient.get(nomClient));
-            }
+        for (Map.Entry<Nom, List<Nom>> entry : candidatsParClient.entrySet()) {
+            Nom nomClient = entry.getKey();
+            List<Nom> candidats = entry.getValue();
+            if (candidats.isEmpty()) continue;
+            traiterClient(nomClient, candidats, resultatsParClient.get(nomClient));
         }
 
         tempsPipelineTotalMs = (System.nanoTime()-debutTotal)/1_000_000;
