@@ -44,7 +44,7 @@ public class ParNPourcentage implements SelectionMatching{
 
         for(int i = 0 ; i<limit; i++){
             CoupleValeur c = couplesTri.get(i);
-            resultats.add(new Resultat(nomClient, c.getNom(), c.getScore(),""));
+            resultats.add(new Resultat(nomClient, c.getNom(), c.getScore(), c.getNom().getFichierSource()));
         }
 
         return resultats;
