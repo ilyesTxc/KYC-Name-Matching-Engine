@@ -38,7 +38,7 @@ public class ParSeuil implements SelectionMatching{
 
         for(CoupleValeur c : coupleTri){
             if(c.getScore() >= seuil){
-                resultats.add(new Resultat(nomClient, c.getNom(), c.getScore(),""));
+                resultats.add(new Resultat(nomClient, c.getNom(), c.getScore(),c.getNom().getFichierSource()));
             }else{
                 break;
             }
