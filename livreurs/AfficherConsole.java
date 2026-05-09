@@ -20,8 +20,8 @@ public class AfficherConsole implements LivreurResultat {
                 System.out.printf("Client: %s, aucune correspondance%n", client);
             } else {
                 for (Resultat r : alertes) {
-                    System.out.printf("Client: %-20s | Sanction: %-20s | Score: %.2f%n",
-                            client, r.getNomSanction().getNomOriginal(), r.getScore());
+                    System.out.printf("Client: %-20s | Sanction: %-20s | Score: %.2f | Source: %s%n",
+                            client, r.getNomSanction().getNomOriginal(), r.getScore(), r.getFichierSource() != null ? r.getFichierSource():" ");
                 }
             }
         }
