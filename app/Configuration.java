@@ -1,4 +1,5 @@
 package kyc.app;
+import kyc.livreurs.AfficherConsole;
 import kyc.selectionneurs.SelectionMatching;
 import kyc.selectionneurs.ParSeuil;
 import kyc.pretraiteurs.PreTraiteurNom;
@@ -6,6 +7,7 @@ import kyc.pretraiteurs.Normalizer;
 import kyc.comparateurs.ComparateurNom;
 import kyc.comparateurs.JaroWinkler;
 import kyc.model.Nom;
+import kyc.livreurs.LivreurResultat;
 import java.util.List;
 
 
@@ -17,6 +19,7 @@ public class Configuration {
     private GenerateurCandidat generateur;
     private ComparateurNom comparateur;
     private GenerateurType generateurType;
+    private LivreurResultat livreur;
 
     public Configuration() {
         this.comparateur = new ComparateurNom() {
@@ -31,6 +34,7 @@ public class Configuration {
         this.strategie = new ParSeuil(0.8);
         this.preTraiteur = new Normalizer();
         this.generateurType = GenerateurType.PHONETIQUE;
+        this.livreur = new AfficherConsole(null);
     }
 
     public ComparateurNom getComparateur() {
@@ -72,5 +76,12 @@ public class Configuration {
 
     public String afficherConfig() {
         return String.format("Config active -> Comparateur : %s | Stratégie : %s | Prétraiteur : %s | Générateur : %s", comparateur.getClass().getSimpleName(), strategie.toString(), preTraiteur.getClass().getSimpleName(), generateurType);
+    }
+    public LivreurResultat getLivreur() {
+        return livreur;
+    }
+    public LivreurResultat setLivreur(LivreurResultat livreur) {
+        this.livreur = livreur;
+
     }
 }

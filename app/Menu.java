@@ -6,7 +6,6 @@ import kyc.comparateurs.Levenshtein;
 import kyc.comparateurs.Exact;
 import kyc.livreurs.AfficherConsole;
 import kyc.livreurs.ExportCSV;
-import kyc.livreurs.LivreurResultat;
 import kyc.model.Nom;
 import kyc.model.Resultat;
 import kyc.pretraiteurs.AccentRemover;
@@ -47,7 +46,8 @@ public class Menu {
             System.out.println("4. Afficher le rapport");
             System.out.println("5. Gérer la configuration");
             System.out.println("6. Voir les fichiers CSV chargés");
-            System.out.println("7. Quitter");
+            System.out.println("7. Réinitialiser les listes");
+            System.out.println("8. Quitter");
             System.out.println("Votre choix : ");
             String choix = scanner.nextLine().trim();
 
@@ -74,6 +74,10 @@ public class Menu {
                     afficherFichierCSV();
                     break;
                 case "7":
+                    miseAJour(listManager.getListeClients());
+                    miseAJour(listManager.getListeSanctions());
+                    break;
+                case "8":
                     quitter();
                     continuer = false;
                     break;
@@ -108,7 +112,7 @@ public class Menu {
     private Map<Nom, List<Resultat>> derniersResultats;
 
     private void lancerPipeline() {
-        MoteurDeRecherche moteur = new MoteurDeRecherche(config, listManager, null);
+        MoteurDeRecherche moteur = new MoteurDeRecherche(config, listManager, config.getLivreur());
         derniersResultats = moteur.lancerPipeline(listManager.getListeClients(), listManager.getListeSanctions());
         if (derniersResultats != null && !derniersResultats.isEmpty()) {
             new AfficherConsole(derniersResultats).livrer();
@@ -304,6 +308,22 @@ public class Menu {
             default:
                 System.out.println("Choix invalide, générateur inchangé");
         }
+        System.out.println("\n1. Livreur : Console");
+        System.out.println("2. Livreur : CSV");
+        System.out.println("Choisir le livreur");
+        choix = scanner.nextLine().trim();
+        switch (choix) {
+            case "1":
+                config.setLivreur(new AfficherConsole(null));
+                System.out.println("Livreur : Console");
+                break;
+            case "2":
+                config.setLivreur(new ExportCSV(null));
+                System.out.println("Livreur : CSV");
+                break;
+            default:
+                System.out.println("Choix invalide , Livreur inchangé");
+        }
     }
 
     private void chargerListeClient() {
@@ -322,8 +342,9 @@ public class Menu {
 
     private void afficherFichierCSV(){
         List<String> fichiers = listManager.getFichiersCharges();
-        if(fichiers == null ){
+        if(fichiers == null || fichiers.isEmpty() ){
             System.out.println("Aucun fichier est chargé.");
+            return;
         }
 
         System.out.println("Fichier CSV chargés :");
