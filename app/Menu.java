@@ -115,7 +115,16 @@ public class Menu {
         MoteurDeRecherche moteur = new MoteurDeRecherche(config, listManager, config.getLivreur());
         derniersResultats = moteur.lancerPipeline(listManager.getListeClients(), listManager.getListeSanctions());
         if (derniersResultats != null && !derniersResultats.isEmpty()) {
-            new AfficherConsole(derniersResultats).livrer();
+            List<Resultat> toutesAlertes = new ArrayList<>();
+            for (List<Resultat> alertes : derniersResultats.values()){
+                toutesAlertes.addAll(alertes);
+            }
+            if (config.getLivreur() instanceof ExportCSV){
+                new ExportCSV(toutesAlertes).livrer();
+            }
+            else {
+                new AfficherConsole(derniersResultats).livrer();
+            }
         }
         if (derniersResultats != null) {
             int totalClients = derniersResultats.size();
@@ -228,8 +237,9 @@ public class Menu {
             case "1":
                 System.out.println("Entrez le seuil :");
                 double seuil = Double.parseDouble(scanner.nextLine().trim());
-                config.setStrategie(new ParSeuil(seuil));
-                System.out.println("Stratégie : ParSeuil(" + seuil +")");
+                ParSeuil parseuil = new ParSeuil(seuil);
+                config.setStrategie(parseuil);
+                System.out.println("Stratégie : ParSeuil(" + parseuil.getSeuil() +")");
                 break;
             case "2":
                 System.out.println("Entrez N:");

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ExportCSV implements LivreurResultat {
-    private static final String DEFAULT_PATH= "resultats_kyc.csv";
+    private static final String DEFAULT_PATH= "csvfiles/resultats_kyc.csv";
     private final List<Resultat> alertes;
 
     public ExportCSV(List<Resultat> alertes) {

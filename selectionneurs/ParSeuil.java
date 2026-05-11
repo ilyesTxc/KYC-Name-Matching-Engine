@@ -25,6 +25,8 @@ public class ParSeuil implements SelectionMatching{
         this.seuil = SEUIL_DEFAUT;
     }
 
+    public double getSeuil(){ return seuil;}
+
     public List<Resultat> selectionner(Nom nomClient, List<CoupleValeur> couples) {
         List<Resultat> resultats = new ArrayList<>();
 
