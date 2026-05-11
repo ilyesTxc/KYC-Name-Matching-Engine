@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class ParNPourcentage implements SelectionMatching{
-    private final static double DEFAULT_POURCENTAGE = 70.0;
+    private final static double DEFAULT_POURCENTAGE = 10.0;
     private final double pourcentage;
 
     public ParNPourcentage() {
