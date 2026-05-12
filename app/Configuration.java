@@ -8,6 +8,8 @@ import kyc.comparateurs.ComparateurNom;
 import kyc.comparateurs.JaroWinkler;
 import kyc.model.Nom;
 import kyc.livreurs.LivreurResultat;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,6 +22,8 @@ public class Configuration {
     private ComparateurNom comparateur;
     private GenerateurType generateurType;
     private LivreurResultat livreur;
+    private List<PreTraiteurNom> preTraiteurs = new ArrayList<>();
+
 
     public Configuration() {
         this.comparateur = new ComparateurNom() {
@@ -52,9 +56,18 @@ public class Configuration {
         this.strategie = strategie;
     }
 
-    public PreTraiteurNom getPreTraiteur() {
-        return preTraiteur;
+    public List<PreTraiteurNom> getPreTraiteurs() {
+        return preTraiteurs;
     }
+
+    public void ajouterPreTraiteur(PreTraiteurNom p) {
+        preTraiteurs.add(p);
+    }
+
+    public void viderPreTraiteurs() {
+        preTraiteurs.clear();
+    }
+
     public void setPreTraiteur(PreTraiteurNom preTraiteur) {
         this.preTraiteur = preTraiteur;
     }

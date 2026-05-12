@@ -4,6 +4,8 @@ import kyc.livreurs.LivreurResultat;
 import kyc.model.CoupleValeur;
 import kyc.model.Nom;
 import kyc.model.Resultat;
+import kyc.pretraiteurs.PreTraiteurNom;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -96,14 +98,11 @@ public class MoteurDeRecherche {
     private void pretraiter(List<Nom> noms) {
         for (Nom nom : noms) {
             if (nom.getNomPretraite() != null) continue;
-            if (config.getPreTraiteur() != null) {
-                List<String> tokens = config.getPreTraiteur().preTraiter(
-                        List.of(nom.getNomOriginal().split("\\s+"))
-                );
-                nom.setNomPretraite(tokens);
-            } else {
-                nom.setNomPretraite(List.of(nom.getNomOriginal().split("\\s+")));
+            List<String> tokens = List.of(nom.getNomOriginal().split("\\s+"));
+            for (PreTraiteurNom p : config.getPreTraiteurs()) {
+                tokens = p.preTraiter(tokens);
             }
+            nom.setNomPretraite(tokens);
         }
     }
 

@@ -258,39 +258,52 @@ public class Menu {
                 System.out.println("Choix invalide, stratégie inchnagée ");
         }
 
-        System.out.println("\n1. Prétraitement : Normalizer");
-        System.out.println("2. Prétraitement : LowerCase");
-        System.out.println("3. Prétraitement : AccentRemover");
-        System.out.println("4. Prétraitement : NGram");
-        System.out.println("5. Prétraitement : SupprimerPonct");
-        System.out.println("Choisir le prétraitement");
-        choix = scanner.nextLine().trim();
-        switch (choix) {
-            case "1":
-                config.setPreTraiteur(new Normalizer());
-                System.out.println("Prétraitement : Normalizer");
-                break;
-            case "2":
-                config.setPreTraiteur(new LowerCase());
-                System.out.println("Prétraitement : LowerCase");
-                break;
-            case "3":
-                config.setPreTraiteur(new AccentRemover());
-                System.out.println("Prétraitement : AccentRemover");
-                break;
-            case "4":
-                System.out.println("Entrez un entier N pour NGram (exemple: 2) :");
-                int ngramSize = Integer.parseInt(scanner.nextLine().trim());
-                config.setPreTraiteur(new NGram(ngramSize));
-                System.out.println("Prétraitement : NGram(" + ngramSize + ")");
-                break;
-            case "5":
-                config.setPreTraiteur(new SupprimerPonct());
-                System.out.println("Prétraitement : SupprimerPonct");
-                break;
-            default:
-                System.out.println("Choix invalide, prétraitement inchangé ");
+        config.viderPreTraiteurs();
+        boolean ajouterEncorePretraiteur = true;
+        while (ajouterEncorePretraiteur) {
+            System.out.println("\nPrétraitements disponibles :");
+            System.out.println("1. Normalizer");
+            System.out.println("2. LowerCase");
+            System.out.println("3. AccentRemover");
+            System.out.println("4. NGram");
+            System.out.println("5. SupprimerPonct");
+            System.out.println("0. Terminer la sélection");
+            System.out.println("Ajouter un prétraitement :");
+            choix = scanner.nextLine().trim();
+            switch (choix) {
+                case "1":
+                    config.ajouterPreTraiteur(new Normalizer());
+                    System.out.println("Normalizer ajouté");
+                    break;
+                case "2":
+                    config.ajouterPreTraiteur(new LowerCase());
+                    System.out.println("LowerCase ajouté");
+                    break;
+                case "3":
+                    config.ajouterPreTraiteur(new AccentRemover());
+                    System.out.println("AccentRemover ajouté");
+                    break;
+                case "4":
+                    System.out.println("Entrez N pour NGram :");
+                    int ngramSize = Integer.parseInt(scanner.nextLine().trim());
+                    config.ajouterPreTraiteur(new NGram(ngramSize));
+                    System.out.println("NGram(" + ngramSize + ") ajouté");
+                    break;
+                case "5":
+                    config.ajouterPreTraiteur(new SupprimerPonct());
+                    System.out.println("SupprimerPonct ajouté");
+                    break;
+                case "0":
+                    ajouterEncorePretraiteur = false;
+                    break;
+                default:
+                    System.out.println("Choix invalide");
+            }
+            if (!choix.equals("0")) {
+                System.out.println("Prétraitements actifs : " + config.getPreTraiteurs().size());
+            }
         }
+
         System.out.println("1. Générateur : Clé Phonétique");
         System.out.println("2. Générateur : Arbre Préfixe");
         System.out.println("3. Générateur : Prefixe Hash");
