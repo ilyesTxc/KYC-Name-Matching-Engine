@@ -1,74 +1,170 @@
-KYC Name Matching Engine :
+# Moteur de Correspondance de Noms KYC
 
-A Java project that simulates a client screening system used in KYC and AML compliance.
+Un projet Java implémentant un moteur de recherche et de correspondance de noms applicable dans tout contexte nécessitant la vérification d'identité à partir de listes de référence. Bien que la recherche de noms soit une problématique générale — utile dans les bases de données, les systèmes d'archives, ou la gestion de doublons — ce projet se concentre sur le cas d'usage KYC *(Know Your Customer)* et AML *(Anti-Money Laundering)*, où cette fonctionnalité est critique.
 
-The goal of the application is to help a bank verify whether a client name appears in one or more sanctions or watchlist files. These lists are provided as CSV files and may contain a large number of records, which makes performance and result relevance important.
+L'objectif est de vérifier si un nom donné figure dans un ou plusieurs fichiers de sanctions ou listes de surveillance, fournis sous forme de fichiers CSV. La taille potentiellement importante de ces listes rend la performance et la pertinence des résultats essentielles.
 
--> Context :
+---
 
-In banking and financial services, institutions must verify clients before opening accounts or providing services. This process helps detect people who may appear on sanctions lists, politically exposed person lists, or other compliance watchlists.
+## Contexte
 
-A simple exact comparison is not enough, because names can be written differently. For example, accents, spelling variations, missing spaces, or typing errors can make two similar names appear different. This project therefore uses a modular matching pipeline that can support exact and fuzzy comparison methods.
+Dans le secteur bancaire et financier, les établissements doivent vérifier leurs clients avant d'ouvrir des comptes ou de fournir des services. Ce processus permet de détecter les personnes susceptibles d'apparaître sur des listes de sanctions, des listes de personnes politiquement exposées (PPE), ou d'autres listes de conformité.
 
--> Project Objective :
+Une simple comparaison exacte ne suffit pas, car les noms peuvent être écrits différemment. Par exemple, des accents, des variantes orthographiques, des espaces manquants ou des erreurs de frappe peuvent faire paraître deux noms similaires comme différents. Ce projet utilise donc un pipeline de correspondance modulaire capable de prendre en charge des méthodes de comparaison exactes et approximatives.
 
-This project aims to build a flexible name matching engine that can compare client names against control lists, calculate similarity scores, select the most relevant matches, and deliver the results in a readable format.
+---
 
-The system is designed around two main use cases. The first is real-time verification, where an agent checks one client name quickly. The second is batch verification, where a full client database is compared against selected control lists.
+## Objectif du projet
 
--> Architecture :
+Ce projet vise à construire un moteur de correspondance de noms flexible capable de :
 
-The project follows a pipeline structure.
+- Comparer des noms de clients avec des listes de contrôle
+- Calculer des scores de similarité
+- Sélectionner les correspondances les plus pertinentes
+- Restituer les résultats dans un format lisible
 
-Data loading
-→ Preprocessing
-→ Candidate generation
-→ Name comparison
-→ Match selection
-→ Result delivery
+Le système est conçu autour de deux cas d'usage principaux. Le premier est la **vérification en temps réel**, où un agent contrôle rapidement un nom de client. Le second est la **vérification par lot**, où une base de données complète de clients est comparée aux listes de contrôle sélectionnées.
 
-Each step is separated into its own component, which makes the project easier to extend and maintain.
+---
 
--> Main Components :
+## Architecture
 
-The kyc.model package contains the main data objects used by the system. Nom represents a person name, CoupleValeur represents a name associated with a similarity score, and Resultat represents a final match between a client and a sanctioned name.
+Le projet suit une structure en pipeline :
 
-The kyc.collections package provides custom collection classes used to store names, candidates, and results. These classes wrap Java collections such as lists, sets, and queues depending on the role of the data.
+```
+Chargement des données
+→ Prétraitement
+→ Génération de candidats
+→ Comparaison des noms
+→ Sélection des correspondances
+→ Restitution des résultats
+```
 
-The kyc.comparateurs package contains the comparison logic. It is designed to support several algorithms such as exact matching, Levenshtein distance, Jaro-Winkler similarity, and N-Gram comparison. These algorithms return a similarity score between 0.0 and 1.0.
+Chaque étape est isolée dans son propre composant, ce qui facilite l'extension et la maintenance du projet.
 
-The candidate generator reduces the number of comparisons by selecting only relevant names before running the comparison algorithms. This is important because comparing every client against every sanctioned name can become expensive with large CSV files.
+---
 
-The kyc.selectionneurs package decides which results should be kept. A selection strategy can keep results above a threshold, keep only the top matches, or keep a percentage of the best results.
+## Composants principaux
 
-The kyc.livreurs package is responsible for delivering the final results. Results can be displayed in the console or exported to a CSV file. This keeps the output logic separate from the matching logic.
+```
+KYC-Name-Matching-Engine/
+│
+├── app/                          # Couche applicative principale
+│   ├── Main.java                 # Point d'entrée du programme
+│   ├── Menu.java                 # Interface utilisateur en ligne de commande
+│   ├── Configuration.java        # Paramètres globaux du moteur
+│   ├── MoteurDeRecherche.java    # Orchestre l'ensemble du pipeline
+│   ├── ListManager.java          # Gestion du chargement des listes CSV
+│   ├── GenerateurCandidat.java   # Présélection des noms avant comparaison
+│   ├── GenerateurBrut.java       # Génération de candidats sans filtrage
+│   ├── GenerateurArbre.java      # Génération via index en arbre
+│   ├── GenerateurPrefixHash.java # Génération via index de préfixes hashés
+│   ├── IndexPhonetique.java      # Index basé sur la clé phonétique
+│   ├── IndexPrefixArbre.java     # Index par préfixe (structure arbre)
+│   ├── IndexPrefixHash.java      # Index par préfixe (structure hash)
+│   └── ClePhonetique.java        # Calcul de la clé phonétique d'un nom
+│
+├── comparateurs/                 # Algorithmes de comparaison (score entre 0.0 et 1.0)
+│   ├── ComparateurNom.java       # Interface commune des comparateurs
+│   ├── ComparateurChaine.java    # Comparaison générique de chaînes
+│   ├── Exact.java                # Correspondance stricte caractère par caractère
+│   ├── JaroWinkler.java          # Similarité adaptée aux noms propres
+│   └── Levenshtein.java          # Distance d'édition entre deux chaînes
+│
+├── pretraiteurs/                 # Normalisation des noms avant comparaison
+│   ├── PreTraiteurNom.java       # Interface commune des prétraiteurs
+│   ├── Normalizer.java           # Chaîne de prétraitements combinés
+│   ├── AccentRemover.java        # Suppression des accents
+│   ├── LowerCase.java            # Conversion en minuscules
+│   ├── SupprimerPonct.java       # Suppression de la ponctuation
+│   └── NGram.java                # Découpage en N-grammes
+│
+├── selectionneurs/               # Stratégies de sélection des résultats (Pattern Strategy)
+│   ├── SelectionMatching.java    # Interface commune des stratégies
+│   ├── ParSeuil.java             # Garde les résultats au-dessus d'un seuil
+│   ├── ParNPremier.java          # Garde les N meilleures correspondances
+│   └── ParNPourcentage.java      # Garde un pourcentage des meilleurs résultats
+│
+├── livreurs/                     # Restitution des résultats
+│   ├── LivreurResultat.java      # Interface commune des livreurs
+│   ├── AfficherConsole.java      # Affichage dans le terminal
+│   └── ExportCSV.java            # Export vers un fichier CSV
+│
+├── model/                        # Objets de données métier
+│   ├── Nom.java                  # Représente un nom de personne
+│   ├── CoupleValeur.java         # Nom + score de similarité associé
+│   └── Resultat.java             # Correspondance finale (client ↔ nom sanctionné)
+│
+└── csvfiles/                     # Listes de surveillance (données de test)
+    ├── peps_names_1k.csv
+    ├── peps_names_2k.csv
+    ├── peps_names_8k.csv
+    ├── peps_names_16k.csv
+    ├── peps_names_32k.csv
+    └── peps_names_512k.csv
+```
 
-The MoteurDeRecherche class acts as the central engine. It coordinates the complete pipeline from loading data to delivering the final results.
+---
 
--> CSV Format :
+## Format CSV
 
-The expected CSV format is simple.
+Le format CSV attendu est simple :
 
+```csv
 id,name
 NK-001,John Doe
 NK-002,Ahmed Ben Ali
-Example Workflow
+```
 
-A user enters a client name such as Ahmed Ben Ali.
+---
 
-The system loads the selected watchlists, preprocesses the names, generates possible candidates, compares the client name with those candidates, keeps the most relevant matches, and finally displays or exports the result.
+## Exemple de fonctionnement
 
-A possible output would be:
+Au lancement, l'utilisateur interagit via un menu en ligne de commande :
 
-Search: Ahmed Ben Ali
+```
+Moteur De Recherche De Noms
+0. Charger un fichier CSV des sanctions
+1. Ajouter liste de clients
+2. Ajouter une liste de sanctions
+3. Lancer le pipeline
+4. Afficher le rapport
+5. Gérer la configuration
+6. Voir les fichiers CSV chargés
+7. Réinitialiser les listes
+8. Quitter
+```
 
-Match found:
-Client: Ahmed Ben Ali
-Matched name: Ahmed Benali
-Source: sanctions_onu.csv
-Confidence: 93%
-Design Goals
+Un flux d'utilisation typique :
 
-This project focuses on creating a clean object-oriented architecture. The main design goal is to separate responsibilities clearly so that algorithms, selection strategies, data handling, and result delivery can evolve independently.
+**1. Charger les données** — option `0` pour charger un fichier CSV de sanctions, option `1` pour charger une liste de clients.
 
-The system is also designed with performance in mind, especially for large files where naive comparison would be too slow.
+**2. Configurer le moteur** — option `5` permet de choisir :
+- le **comparateur** (Exact, Levenshtein, JaroWinkler)
+- la **stratégie de sélection** (ParSeuil, ParNPremier, ParNPourcentage)
+- les **prétraitements** à appliquer (LowerCase, AccentRemover, NGram, SupprimerPonct...)
+- le **générateur de candidats** (Phonétique, Arbre, Préfixe Hash, Brut)
+- le **livreur** (Console ou CSV)
+
+**3. Lancer le pipeline** — option `3` exécute la recherche et affiche les statistiques :
+
+```
+********** STATISTIQUES *********
+Temps de prétraitement  : 12 ms
+Total clients vérifiés  : 150
+Clients avec matching   : 43
+Client sans matching    : 107
+Score moyen             : 87.4%
+Temps total de pipeline : 340 ms
+*********************************
+```
+
+**4. Consulter le rapport** — option `4` affiche le détail des alertes et propose un export CSV.
+
+---
+
+## Objectifs de conception
+
+Ce projet s'attache à créer une architecture orientée objet propre. L'objectif principal est de séparer clairement les responsabilités afin que les algorithmes, les stratégies de sélection, la gestion des données et la restitution des résultats puissent évoluer indépendamment.
+
+Le système est également conçu dans un souci de performance, en particulier pour les grands fichiers où une comparaison naïve serait trop lente.
